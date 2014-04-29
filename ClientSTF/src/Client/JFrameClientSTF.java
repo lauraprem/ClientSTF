@@ -123,6 +123,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
 
         jTextField2.setText("jTextField2");
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("jLabel4");
 
         jTextField3.setText("jTextField3");
@@ -274,7 +275,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         if (fichier != null) {
             try {
                 InetAddress AdressServeur = InetAddress.getByName(jTextFieldNomFichier.getText().toString());
-                client.sendFile(fichier, AdressServeur);
+                client.SendFile(fichier, AdressServeur);
             } catch (UnknownHostException ex) {
                 Logger.getLogger(JFrameClientSTF.class.getName()).log(Level.SEVERE, null, ex);
             }
