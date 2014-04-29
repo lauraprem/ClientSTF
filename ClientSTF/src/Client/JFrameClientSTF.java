@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Client;
 
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -41,54 +35,45 @@ public class JFrameClientSTF extends javax.swing.JFrame {
 
         jFileChooser = new javax.swing.JFileChooser();
         jDialogErreur = new javax.swing.JDialog();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jLabelTitre = new javax.swing.JLabel();
         jLabelAdresseServer = new javax.swing.JLabel();
         jTextFieldAdressServer = new javax.swing.JTextField();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel2 = new javax.swing.JPanel();
-        jButtonReceivefile = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        jTabbedPane = new javax.swing.JTabbedPane();
+        jPanelSendfile = new javax.swing.JPanel();
         jButtonSendfile = new javax.swing.JButton();
         jLabelNomFichier = new javax.swing.JLabel();
         jTextFieldNomFichier = new javax.swing.JTextField();
         jButtonSelect = new javax.swing.JButton();
+        jPanelReceive = new javax.swing.JPanel();
+        jButtonReceivefile = new javax.swing.JButton();
+        jLabelFichierDistant = new javax.swing.JLabel();
+        jLabelFichierLocal = new javax.swing.JLabel();
+        jTextFieldFichierDistant = new javax.swing.JTextField();
+        jTextFieldFichierLocal = new javax.swing.JTextField();
+        jLabelCheminEnrg = new javax.swing.JLabel();
+        jTextFieldCheminEnrg = new javax.swing.JTextField();
+        jButtonSelectDossier = new javax.swing.JButton();
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setText("jLabel1");
-
-        jButton1.setText("jButton1");
+        jDialogErreur.setMaximumSize(new java.awt.Dimension(400, 150));
+        jDialogErreur.setMinimumSize(new java.awt.Dimension(400, 150));
+        jDialogErreur.setPreferredSize(new java.awt.Dimension(400, 150));
+        jDialogErreur.setResizable(false);
 
         javax.swing.GroupLayout jDialogErreurLayout = new javax.swing.GroupLayout(jDialogErreur.getContentPane());
         jDialogErreur.getContentPane().setLayout(jDialogErreurLayout);
         jDialogErreurLayout.setHorizontalGroup(
             jDialogErreurLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialogErreurLayout.createSequentialGroup()
-                .addGap(149, 149, 149)
-                .addGroup(jDialogErreurLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton1))
-                .addContainerGap(178, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         jDialogErreurLayout.setVerticalGroup(
             jDialogErreurLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialogErreurLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(70, 70, 70)
-                .addComponent(jButton1)
-                .addGap(28, 28, 28))
+            .addGap(0, 147, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Aplication Client STF");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setResizable(false);
 
         jLabelTitre.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabelTitre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -103,81 +88,8 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jTextFieldAdressServer.setToolTipText("");
         jTextFieldAdressServer.setName("jTextFieldAdressServer"); // NOI18N
 
-        jTabbedPane1.setToolTipText("");
-        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-
-        jButtonReceivefile.setText("Recevoir le Fichier");
-        jButtonReceivefile.setName("jButtonReceivefile"); // NOI18N
-        jButtonReceivefile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonReceivefileActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel2.setText("Nom du fichier distant :");
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("Nom du fichier local :");
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel4.setText("Chemin d'enregistrement :");
-
-        jButton2.setText("Select.");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                            .addComponent(jTextField3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(143, 143, 143)
-                        .addComponent(jButtonReceivefile)))
-                .addContainerGap(39, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addGap(18, 18, 18)
-                .addComponent(jButtonReceivefile)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-
-        jLabel2.getAccessibleContext().setAccessibleName("");
-
-        jTabbedPane1.addTab("Recevoir un fichier", jPanel2);
+        jTabbedPane.setToolTipText("");
+        jTabbedPane.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jButtonSendfile.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jButtonSendfile.setText("Envoyer le Ficher");
@@ -185,7 +97,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jButtonSendfile.setName("jButtonSendfile"); // NOI18N
         jButtonSendfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSendfileActionPerformed(evt);
+                SendFileActionPerformed(evt);
             }
         });
 
@@ -201,33 +113,33 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jButtonSelect.setName("jButtonSelect"); // NOI18N
         jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectActionPerformed(evt);
+                SelectFileActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelSendfileLayout = new javax.swing.GroupLayout(jPanelSendfile);
+        jPanelSendfile.setLayout(jPanelSendfileLayout);
+        jPanelSendfileLayout.setHorizontalGroup(
+            jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSendfileLayout.createSequentialGroup()
+                .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelSendfileLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabelNomFichier)
                         .addGap(18, 18, 18)
                         .addComponent(jTextFieldNomFichier, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonSelect))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanelSendfileLayout.createSequentialGroup()
                         .addGap(149, 149, 149)
                         .addComponent(jButtonSendfile)))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        jPanelSendfileLayout.setVerticalGroup(
+            jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSendfileLayout.createSequentialGroup()
+                .addContainerGap(74, Short.MAX_VALUE)
+                .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNomFichier)
                     .addComponent(jTextFieldNomFichier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSelect))
@@ -236,7 +148,82 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 .addGap(38, 38, 38))
         );
 
-        jTabbedPane1.addTab("Envoyer un fichier", jPanel1);
+        jTabbedPane.addTab("Envoyer un fichier", jPanelSendfile);
+
+        jButtonReceivefile.setText("Recevoir le Fichier");
+        jButtonReceivefile.setName("jButtonReceivefile"); // NOI18N
+        jButtonReceivefile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReceiveFileActionPerformed(evt);
+            }
+        });
+
+        jLabelFichierDistant.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabelFichierDistant.setText("Nom du fichier distant :");
+
+        jLabelFichierLocal.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabelFichierLocal.setText("Nom du fichier local :");
+
+        jLabelCheminEnrg.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabelCheminEnrg.setText("Chemin d'enregistrement :");
+
+        jTextFieldCheminEnrg.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
+        jButtonSelectDossier.setText("Select.");
+        jButtonSelectDossier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelectDossierActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelReceiveLayout = new javax.swing.GroupLayout(jPanelReceive);
+        jPanelReceive.setLayout(jPanelReceiveLayout);
+        jPanelReceiveLayout.setHorizontalGroup(
+            jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelReceiveLayout.createSequentialGroup()
+                .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelReceiveLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelFichierLocal)
+                            .addComponent(jLabelCheminEnrg)
+                            .addComponent(jLabelFichierDistant))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldFichierDistant, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldFichierLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonSelectDossier))
+                    .addGroup(jPanelReceiveLayout.createSequentialGroup()
+                        .addGap(157, 157, 157)
+                        .addComponent(jButtonReceivefile)))
+                .addContainerGap(59, Short.MAX_VALUE))
+        );
+        jPanelReceiveLayout.setVerticalGroup(
+            jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelReceiveLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelFichierDistant)
+                    .addComponent(jTextFieldFichierDistant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelFichierLocal)
+                    .addComponent(jTextFieldFichierLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSelectDossier))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jButtonReceivefile)
+                .addGap(24, 24, 24))
+        );
+
+        jLabelFichierDistant.getAccessibleContext().setAccessibleName("");
+
+        jTabbedPane.addTab("Recevoir un fichier", jPanelReceive);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -247,73 +234,136 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 .addComponent(jLabelTitre)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jLabelAdresseServer)
                 .addGap(42, 42, 42)
                 .addComponent(jTextFieldAdressServer, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jTabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelTitre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldAdressServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelAdresseServer))
                 .addGap(23, 23, 23)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane1.getAccessibleContext().setAccessibleName("");
+        jTabbedPane.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonSendfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendfileActionPerformed
-        if (fichier != null) {
+    private void SendFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendFileActionPerformed
+        int codeErreur;
+
+        if (fichier != null && !jTextFieldAdressServer.getText().equals("")) {
             try {
-                InetAddress AdressServeur = InetAddress.getByName(jTextFieldAdressServer.getText().toString());
-                client.SendFile(fichier, AdressServeur);
+                InetAddress AdressServeur = InetAddress.getByName(jTextFieldAdressServer.getText());
+                codeErreur = client.SendFile(fichier, AdressServeur);
             } catch (UnknownHostException ex) {
-                Logger.getLogger(JFrameClientSTF.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "L'adresse du Serveur est inconnue.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
             }
-        }else{
-            jDialogErreur.setVisible(true);
-            
+
+            //Traitement code erreur /////// a faire //voir plutot erreur dans client.java
+        } else {
+            if (jTextFieldAdressServer.getText().equals("")) {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Vous n'avez pas indiqué l'adresse du Serveur.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Vous n'avez pas selectionné de fichier.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
-    }//GEN-LAST:event_jButtonSendfileActionPerformed
+    }//GEN-LAST:event_SendFileActionPerformed
 
-    private void jButtonReceivefileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReceivefileActionPerformed
-//        client.reveiveFile(,,);
-    }//GEN-LAST:event_jButtonReceivefileActionPerformed
+    private void ReceiveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiveFileActionPerformed
+        if (!jTextFieldCheminEnrg.getText().equals("") && !jTextFieldAdressServer.getText().equals("") && !jTextFieldFichierDistant.getText().equals("") && !jTextFieldFichierLocal.getText().equals("")) {
+            try {
+                InetAddress AdressServeur = InetAddress.getByName(jTextFieldAdressServer.getText());
+                client.ReceiveFile(jTextFieldFichierLocal.getText(), jTextFieldFichierDistant.getText(), AdressServeur, jTextFieldCheminEnrg.getText());
+            } catch (UnknownHostException ex) {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "L'adresse du Serveur est inconnue.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            if (jTextFieldAdressServer.getText().equals("")) {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Vous n'avez pas indiqué l'adresse du Serveur.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            }
 
-    private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectActionPerformed
-        // Selection du fichier
-        JFileChooser jFileChooser = new JFileChooser();
+            if (jTextFieldFichierDistant.getText().equals("")) {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Vous n'avez pas indiqué le nom du fichier distant.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            }
 
+            if (jTextFieldFichierLocal.getText().equals("")) {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Vous n'avez pas indiqué le nom du fichier local.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+
+            if (jTextFieldCheminEnrg.getText().equals("")) {
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Vous n'avez pas selectionné l'endroit où vous voulez enregistrer le fichier.",
+                        "Problème : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_ReceiveFileActionPerformed
+
+// Selection du fichier
+    private void SelectFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectFileActionPerformed
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int returnVal = jFileChooser.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //Recuperation du fichier
             fichier = jFileChooser.getSelectedFile();
 
-            // Affichage du fichier selectionne pour l'utilisateur
+            // Affichage du fichier selectionne
             jTextFieldNomFichier.setText(fichier.getAbsolutePath());
         } else {
             fichier = null;
+            jTextFieldNomFichier.setText("");
         }
-    }//GEN-LAST:event_jButtonSelectActionPerformed
+    }//GEN-LAST:event_SelectFileActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    // Selection du dossier
+    private void SelectDossierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectDossierActionPerformed
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = jFileChooser.showOpenDialog(this);
-        jTextFieldNomFichier.setText(jFileChooser.getSelectedFile().getAbsolutePath().toString());
-    }//GEN-LAST:event_jButton2ActionPerformed
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //Recuperation du dossier
+            fichier = jFileChooser.getSelectedFile();
+
+            // Affichage du dossier selectionne
+            jTextFieldCheminEnrg.setText(fichier.getAbsolutePath());
+        } else {
+            fichier = null;
+            jTextFieldCheminEnrg.setText("");
+        }
+    }//GEN-LAST:event_SelectDossierActionPerformed
 
     /**
      * @param args the command line arguments
@@ -329,16 +379,21 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JFrameClientSTF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrameClientSTF.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JFrameClientSTF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrameClientSTF.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JFrameClientSTF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrameClientSTF.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JFrameClientSTF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrameClientSTF.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -351,27 +406,25 @@ public class JFrameClientSTF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonReceivefile;
     private javax.swing.JButton jButtonSelect;
+    private javax.swing.JButton jButtonSelectDossier;
     private javax.swing.JButton jButtonSendfile;
     private javax.swing.JDialog jDialogErreur;
     private javax.swing.JFileChooser jFileChooser;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelAdresseServer;
+    private javax.swing.JLabel jLabelCheminEnrg;
+    private javax.swing.JLabel jLabelFichierDistant;
+    private javax.swing.JLabel jLabelFichierLocal;
     private javax.swing.JLabel jLabelNomFichier;
     private javax.swing.JLabel jLabelTitre;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JPanel jPanelReceive;
+    private javax.swing.JPanel jPanelSendfile;
+    private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JTextField jTextFieldAdressServer;
+    private javax.swing.JTextField jTextFieldCheminEnrg;
+    private javax.swing.JTextField jTextFieldFichierDistant;
+    private javax.swing.JTextField jTextFieldFichierLocal;
     private javax.swing.JTextField jTextFieldNomFichier;
     // End of variables declaration//GEN-END:variables
 }
