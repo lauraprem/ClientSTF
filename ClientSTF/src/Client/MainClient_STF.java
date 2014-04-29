@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package client_stf;
+package Client;
 
 /**
  *
