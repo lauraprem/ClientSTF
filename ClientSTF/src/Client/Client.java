@@ -2,9 +2,11 @@
 package Client;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +16,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,6 +39,8 @@ public class Client
         byte[] data = new byte[512];
         datagramPacketEnvoie = new DatagramPacket(data, data.length);
         portServeur = 69;
+        byte[] buffer = new byte[512];
+        datagramPacketReception = new DatagramPacket(buffer, buffer.length);
     }
 
     // METHODES
@@ -56,12 +62,6 @@ public class Client
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
-    public void CreationDatagramReception(InetAddress adresseServeur)
-    {
-        byte[] buffer = new byte[512];
-        datagramPacketReception = new DatagramPacket(buffer, buffer.length, adresseServeur, portServeur);
-    }
-
     public void EnvoiData(DatagramPacket d, InetAddress serveur)
     {
         while (true)
@@ -70,7 +70,6 @@ public class Client
             {
                 // on envoie
                 datagramSoket.send(d);
-                CreationDatagramReception(serveur);
                 // on receptionne la réponse
                 datagramSoket.receive(datagramPacketReception);
                 byte[] buf = new byte[512];
@@ -99,8 +98,31 @@ public class Client
         }
     }
 
-    // -1 = mauvais déroulement; 1 = bon déroulement
-    public int sendFile(File fichier, InetAddress serveur)
+    private void EvoieAck(DatagramPacket d, InetAddress serveur)
+    {
+        try
+        {
+            byte[] data = new byte[512];
+            String temp = new String();
+
+            // demande pour envoyer un fichier et acknowlege
+            temp = "04" + d.getData()[2] + d.getData()[3];
+            data = temp.getBytes("octet");
+            datagramSoket.send(new DatagramPacket(data, data.length, serveur, portServeur));
+        } catch (UnsupportedEncodingException ex)
+        {
+            System.err.println(ex.getMessage());
+        } catch (IOException ex)
+        {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    // 0 = bon déroulement
+    // 1 = impossible de lire le fichier parce qu'il n'existe pas ou qu'on n'a pas les droits
+    // 2 = impossibe de lire le fichier a cause de l'encodage
+    // 3 = problème d'entrée/sortie
+    public int SendFile(File fichier, InetAddress serveur)
     {
         try
         {
@@ -124,7 +146,7 @@ public class Client
                 String buffer = new String();
                 //numérotation des datagrammes
                 int n = 1;
-                
+
                 for (int i = 0; i < fichier.length(); i++)
                 {
                     for (int j = 0; j < 512 && monFileReader.ready(); j++)
@@ -151,17 +173,55 @@ public class Client
         } catch (SecurityException ex)
         {
             System.err.println(ex.getMessage());
-            return -1;
+            return 1;
         } catch (UnsupportedEncodingException e)
         {
             System.err.println(e.getMessage());
-            return -1;
+            return 2;
         } catch (IOException exe)
         {
             System.err.println(exe.getMessage());
-            return -1;
+            return 3;
         }
-        return 1;
+        return 0;
+    }
+
+    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin)
+    {
+        try
+        {
+            byte[] data = new byte[512];
+            String temp = new String();
+            String user = System.getProperty("user.name");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(chemin + nomLocal)));
+            // demande pour envoyer un fichier et acknowlege
+            temp = "01" + nomDistant + "0ctet0";
+            data = temp.getBytes("octet");
+            CreationDatagramEnvoie(data, portServeur, serveur);
+            datagramSoket.send(datagramPacketEnvoie);
+            portServeur = datagramPacketReception.getPort();
+            datagramSoket.receive(datagramPacketReception);
+            temp = new String();
+            temp += datagramPacketReception.getData();
+            EvoieAck(datagramPacketReception, serveur);
+
+            while (datagramPacketReception.getData().length == 512)
+            {
+                datagramSoket.receive(datagramPacketReception);
+                temp += datagramPacketReception.getData();
+                EvoieAck(datagramPacketReception, serveur);
+            }
+            writer.append(temp);
+        } catch (UnsupportedEncodingException ex)
+        {
+            System.err.println(ex.getMessage());
+            return 1;
+        } catch (IOException ex)
+        {
+            System.err.println(ex.getMessage());
+            return 2;
+        }
+        return 0;
     }
 
     public static String getContents(File aFile)
@@ -254,4 +314,5 @@ public class Client
 //        }
 //        return msg.equals("quitter");
 //    }
+
 }
