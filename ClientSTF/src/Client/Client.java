@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -18,67 +19,95 @@ import java.net.UnknownHostException;
  *
  * @author Corinne
  */
-public class Client {
+public class Client
+{
 
     // ATTRIBUTS
     private DatagramSocket datagramSoket;
     private DatagramPacket datagramPacketReception;
     private DatagramPacket datagramPacketEnvoie;
+    private final int portServeur = 69;
 
     // CONSTRUCTEUR
-    public Client() {
+    public Client()
+    {
         initSocket();
         byte[] data = new byte[512];
         datagramPacketEnvoie = new DatagramPacket(data, data.length);
     }
 
     // METHODES
-    public void initSocket() {
+    public void initSocket()
+    {
         int SO_TIMEOUT = 180000; // 3 minutes
-        try {
+        try
+        {
             datagramSoket = new DatagramSocket();
             datagramSoket.setSoTimeout(SO_TIMEOUT);
-        } catch (SocketException ex) {
+        } catch (SocketException ex)
+        {
             System.err.println("Port déjà occupé : " + ex.getMessage());
         }
     }
 
-    public void CreationDatagramEnvoie(byte[] data, int portServeur, InetAddress adresseServeur) {
+    public void CreationDatagramEnvoie(byte[] data, int portServeur, InetAddress adresseServeur)
+    {
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
-    // -1 = mauvais déroulement
-    public int sendFile(File fichier, InetAddress serveur) {
-        try {if(fichier.canRead())
+    // -1 = mauvais déroulement; 1 = bon déroulement
+    public int sendFile(File fichier, InetAddress serveur)
+    {
+        try
         {
-            byte[] data = new byte[512];
-            String temp= new String();
-            temp = "02"+fichier.getName()+"0ctet0";
-            data = temp.getBytes("octet");
-            CreationDatagramEnvoie(data, portServeur, serveur);
-        }
-        } catch (SecurityException ex) {
+            if (fichier.canRead())
+            {
+                byte[] data = new byte[512];
+                String temp = new String();
+                temp = "02" + fichier.getName() + "0ctet0";
+                data = temp.getBytes("octet");
+                CreationDatagramEnvoie(data, portServeur, serveur);
+                datagramSoket.send(datagramPacketEnvoie);
+
+            }
+
+        } catch (SecurityException ex)
+        {
             System.err.println(ex.getMessage());
             return -1;
+        } catch (UnsupportedEncodingException e)
+        {
+            System.err.println(e.getMessage());
+            return -1;
+        } catch (IOException exe)
+        {
+            System.err.println(exe.getMessage());
+            return -1;
         }
+        return 1;
     }
 
-    
-    public static String getContents(File aFile) {
+    public static String getContents(File aFile)
+    {
         StringBuilder contents = new StringBuilder();
 
-        try {
+        try
+        {
             BufferedReader input = new BufferedReader(new FileReader(aFile));
-            try {
+            try
+            {
                 String line = null;
-                while ((line = input.readLine()) != null) {
+                while ((line = input.readLine()) != null)
+                {
                     contents.append(line);
                     contents.append(System.getProperty("line.separator"));
                 }
-            } finally {
+            } finally
+            {
                 input.close();
             }
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             ex.printStackTrace();
         }
 
