@@ -26,7 +26,7 @@ public class Client
     private DatagramSocket datagramSoket;
     private DatagramPacket datagramPacketReception;
     private DatagramPacket datagramPacketEnvoie;
-    private final int portServeur = 69;
+    private int portServeur;
 
     // CONSTRUCTEUR
     public Client()
@@ -34,6 +34,7 @@ public class Client
         initSocket();
         byte[] data = new byte[512];
         datagramPacketEnvoie = new DatagramPacket(data, data.length);
+        portServeur = 69;
     }
 
     // METHODES
@@ -55,6 +56,29 @@ public class Client
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
+    public void CreationDatagramReception(InetAddress adresseServeur)
+    {
+        byte[] buffer = new byte[512];
+        datagramPacketReception = new DatagramPacket(buffer, buffer.length, adresseServeur, portServeur);
+    }
+
+    public void EnvoieDatagram(DatagramPacket d, InetAddress serveur)
+    {
+        try
+        {
+            datagramSoket.send(d);
+            CreationDatagramReception(serveur);
+            datagramSoket.receive(datagramPacketReception);
+        } catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        } catch (SocketTimeoutException e)
+        {
+            System.out.println("time_out dépassé : " + e.getMessage());
+        }
+
+    }
+
     // -1 = mauvais déroulement; 1 = bon déroulement
     public int sendFile(File fichier, InetAddress serveur)
     {
@@ -62,12 +86,29 @@ public class Client
         {
             if (fichier.canRead())
             {
+                FileReader monFileReader = new FileReader(fichier);
                 byte[] data = new byte[512];
                 String temp = new String();
                 temp = "02" + fichier.getName() + "0ctet0";
                 data = temp.getBytes("octet");
                 CreationDatagramEnvoie(data, portServeur, serveur);
                 datagramSoket.send(datagramPacketEnvoie);
+                CreationDatagramReception(serveur);
+                datagramSoket.receive(datagramPacketReception);
+                portServeur = datagramPacketReception.getPort();
+                // monFileReader.
+                data = new byte[512];
+                temp = new String();
+                for (int i = 0; i < fichier.length(); i++)
+                {
+                    for (int j = 0; j < 512; j++)
+                    {
+                        temp += monFileReader.read();
+                    }
+                    monFileReader.mark(i);
+
+                }
+                //temp = "0301"+ fichier.
 
             }
 
