@@ -1,23 +1,17 @@
 /* FAGNO CORINNE */
 package Client;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -31,7 +25,7 @@ public class Client
     private DatagramPacket datagramPacketReception;
     private DatagramPacket datagramPacketEnvoie;
     private int portServeur;
-    
+
     // Constantes spécifiques du protocole TFTP
     // Codes des opérations TFTP
     private final static byte RRQ_OPCODE = 1; // Requête lecture
@@ -54,7 +48,7 @@ public class Client
     public Client()
     {
         initSocket();
-        
+
         //?????//
         byte[] data = new byte[BLOCK_SIZE];
         datagramPacketEnvoie = new DatagramPacket(data, data.length);
@@ -82,19 +76,20 @@ public class Client
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
-     // Paquets
-    public byte[] CreatPaquet_RRQ_WRQ(int codeOp, String nomFichier, String mode) {
+    // Paquets
+    public byte[] CreatPaquet_RRQ_WRQ(int codeOp, String nomFichier, String mode)
+    {
         int size = 0;
         byte[] data = new byte[BLOCK_SIZE];
 
         // Code Op
         data[0] = 0;
         data[1] = (byte) codeOp;
-        size = size + 2;
+        size += 2;
 
         // Nom fichier
         System.arraycopy(nomFichier.getBytes(), 0, data, size, nomFichier.getBytes().length);
-        size = size + nomFichier.getBytes().length;
+        size += nomFichier.getBytes().length;
 
         // 0
         data[size] = 0;
@@ -102,7 +97,7 @@ public class Client
 
         // Mode
         System.arraycopy(mode.getBytes(), 0, data, size, mode.getBytes().length);
-        size = size + mode.getBytes().length;
+        size += mode.getBytes().length;
 
         // 0
         data[size] = 0;
@@ -111,20 +106,21 @@ public class Client
         return data;
     }
 
-    public byte[] CreatPaquet_DATA(int codeOp,byte d ,byte u, byte[] donnees) {
+    public byte[] CreatPaquet_DATA(int codeOp, byte d, byte u, byte[] donnees)
+    {
         int size = 0;
         byte[] data = new byte[donnees.length + 4];
 
         // Code Op
         data[0] = 0;
         data[1] = (byte) codeOp;
-        size = size + 2;
+        size += 2;
 
         // Num bloc
-         data[size] = d;
-         size++;
-         data[size] = u;
-                 
+        data[size] = d;
+        size++;
+        data[size] = u;
+        size++;
         // Donnees
         System.arraycopy(donnees, 0, data, size, donnees.length);
         size = size + donnees.length;
@@ -132,7 +128,8 @@ public class Client
         return data;
     }
 
-    public byte[] CreatPaquet_ACK(int codeOp, byte[] numBloc) {
+    public byte[] CreatPaquet_ACK(int codeOp, byte[] numBloc)
+    {
         int size = 0;
         byte[] data = new byte[4];
 
@@ -148,7 +145,8 @@ public class Client
         return data;
     }
 
-    public byte[] CreatPaquet_ERROR(int codeOp, int codeErreur, String msgErreur) {
+    public byte[] CreatPaquet_ERROR(int codeOp, int codeErreur, String msgErreur)
+    {
         int size = 0;
         byte[] data = new byte[4];
 
@@ -183,7 +181,7 @@ public class Client
                 datagramSoket.send(d);
                 // on receptionne la réponse
                 datagramSoket.receive(datagramPacketReception);
-                byte[] buf = new byte[BLOCK_SIZE];
+                byte[] buf ;
                 buf = datagramPacketReception.getData();
                 // si on avait envoyé
                 if (d.getData()[1] == WRQ_OPCODE)
@@ -241,18 +239,12 @@ public class Client
             if (fichier.canRead())
             {
                 FileInputStream monFileInputStream = new FileInputStream(fichier);
-                byte[] data = new byte[BLOCK_SIZE];
+                byte[] data ;
                 String temp = new String();
 
                 // demande pour envoyer un fichier et acknowlege 
                 data = CreatPaquet_RRQ_WRQ(WRQ_OPCODE, fichier.getName(), BINARY_MODE);
-//                temp = "octet";
-//                data[0] = 0;
-//                data[1] = 2;
-//                System.arraycopy(fichier.getName().getBytes(), 0, data, 2, fichier.getName().getBytes().length);
-//                data[fichier.getName().getBytes().length + 2] = 0;
-//                System.arraycopy(temp.getBytes(), 0, data, fichier.getName().getBytes().length + 3, temp.getBytes().length);
-//                data[fichier.getName().getBytes().length + 3 + temp.getBytes().length] = 0;
+                data[fichier.getName().getBytes().length + 3 + temp.getBytes().length] = 0;
                 CreationDatagramEnvoie(data, portServeur, serveur);
                 EnvoiData(datagramPacketEnvoie, serveur);
                 portServeur = datagramPacketReception.getPort();
@@ -275,23 +267,23 @@ public class Client
                         data = new byte[a + 4];
                         monFileInputStream.read(data, 0, a);
                         /*data[0] = 0;
-                        data[1] = 3;*/
-                        data = CreatPaquet_DATA(DATA_OPCODE,d, u,data);
+                         data[1] = 3;*/
+                        data = CreatPaquet_DATA(DATA_OPCODE, d, u, data);
                         CreationDatagramEnvoie(data, portServeur, serveur);
                         EnvoiData(datagramPacketEnvoie, serveur);
                         break;
 
                     }
-                    /*data[0] = 0;
-                    data[1] = 3;
-                    data[2] = d;
-                    data[3] = u;*/
-                    data = CreatPaquet_DATA(DATA_OPCODE,d, u,data);
+                    data = CreatPaquet_DATA(DATA_OPCODE, d, u, data);
                     CreationDatagramEnvoie(data, portServeur, serveur);
                     EnvoiData(datagramPacketEnvoie, serveur);
                     buffer = new String();
                     data = new byte[516];
-                    if (u == 9)
+                    if (u == 9 && d == 9)
+                    {
+                        u = 1;
+                        d = 0;
+                    } else if (u == 9)
                     {
                         u = 0;
                         d++;
@@ -330,7 +322,7 @@ public class Client
             // demande pour envoyer un fichier et acknowlege
             data = CreatPaquet_RRQ_WRQ(RRQ_OPCODE, nomDistant, BINARY_MODE);
             /*data = temp = "01" + nomDistant + "0ctet0";
-            data = temp.getBytes("octet");*/
+             data = temp.getBytes("octet");*/
             CreationDatagramEnvoie(data, portServeur, serveur);
             datagramSoket.send(datagramPacketEnvoie);
             portServeur = datagramPacketReception.getPort();
@@ -358,95 +350,5 @@ public class Client
         return 0;
     }
 
-    public static String getContents(File aFile)
-    {
-        StringBuilder contents = new StringBuilder();
-
-        try
-        {
-            BufferedReader input = new BufferedReader(new FileReader(aFile));
-            try
-            {
-                String line = null;
-                while ((line = input.readLine()) != null)
-                {
-                    contents.append(line);
-                    contents.append(System.getProperty("line.separator"));
-                }
-            } finally
-            {
-                input.close();
-            }
-        } catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        return contents.toString();
-    }
-//    public void run(){
-//        try {
-//            byte[] dataEnvoi;
-//            byte[] dataRecu = new byte[4096];
-//            InetAddress ipAdresseServeur = InetAddress.getByName("localhost");
-//            int portServeur = 69;
-//            
-//            /*********************** PRISE DE CONTACT ***********************/
-//            // Envoie msg prise de contact au serveur
-//            String msg = "";
-//            dataEnvoi = msg.getBytes("ascii");
-//            CreationDatagramEnvoie(dataEnvoi, portServeur,ipAdresseServeur);
-//            datagramSoket.send(datagramPacketEnvoie);
-//            
-//            // Reception msg prise de contact du serveur
-//            datagramSoket.receive(datagramPacketReception);
-//            //Recuperation des donnees
-//            ipAdresseServeur = datagramPacketReception.getAddress();
-//            portServeur = datagramPacketReception.getPort();
-//            msg = new String(datagramPacketReception.getData(),"ascii");
-//            // Affichage du message du serveur
-//            System.out.println("Serveur("+ipAdresseServeur.toString()+" : "+portServeur+") : "+msg);
-//            
-//            
-//            /******************* DISCUSSION AVEC LE SERVEUR *******************/
-//            //while(QuitterSocket(dataRecu) != true){
-//                
-//                //Enregistrement de se que tape le Client au clavier
-//                // connexion d'un buffer de lecture sur le flux d'entrée
-//                BufferedReader entree = new BufferedReader(new InputStreamReader(System.in));
-//                msg = entree.readLine();
-//                dataEnvoi = msg.getBytes("ascii");
-//                // Envoie le msg au serveur
-//                CreationDatagramEnvoie(dataEnvoi, portServeur,ipAdresseServeur);
-//                datagramSoket.send(datagramPacketEnvoie);
-//                
-//                //Reception client
-//                datagramPacketReception = new DatagramPacket(dataRecu, dataRecu.length);
-//                datagramSoket.receive(datagramPacketReception);
-//                //Recuperation des donnees du serveur
-//                ipAdresseServeur = datagramPacketReception.getAddress();
-//                portServeur = datagramPacketReception.getPort();
-//                msg = new String( datagramPacketReception.getData(),"ascii");
-//                // Affichage du message du serveur
-//                System.out.println("Serveur("+ipAdresseServeur.toString()+" : "+portServeur+") : "+msg);
-//           // }
-//            datagramSoket.close();
-//               
-//        }catch(SocketTimeoutException e){
-//                System.out.println("time_out dépassé : "+e.getMessage());
-//                datagramSoket.close();
-//        }catch (UnknownHostException e1) {
-//            System.out.println("Erreur adrresse IP : "+e1.getMessage());
-//        }catch (IOException e2) {
-//            System.out.println("Erreur saisie clavier : "+e2.getMessage());
-//        }
-//    }
-//    public boolean QuitterSocket(byte[] msgData){
-//        String msg = "";
-//        for(int i = 0; i<7; i++){
-//            msg += (char)msgData[i];
-//        }
-//        return msg.equals("quitter");
-//    }
 
 }
