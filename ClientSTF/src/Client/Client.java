@@ -17,8 +17,7 @@ import java.net.SocketTimeoutException;
  *
  * @author Corinne
  */
-public class Client
-{
+public class Client {
 
     // ATTRIBUTS
     private DatagramSocket datagramSoket;
@@ -45,8 +44,7 @@ public class Client
     private final static int BLOCK_SIZE = 512;
 
     // CONSTRUCTEUR
-    public Client()
-    {
+    public Client() {
         initSocket();
 
         //?????//
@@ -58,21 +56,17 @@ public class Client
     }
 
     // METHODES
-    public void initSocket()
-    {
+    public void initSocket() {
         int SO_TIMEOUT = 180000; // 3 minutes
-        try
-        {
+        try {
             datagramSoket = new DatagramSocket();
             datagramSoket.setSoTimeout(SO_TIMEOUT);
-        } catch (SocketException ex)
-        {
+        } catch (SocketException ex) {
             System.err.println("Port déjà occupé : " + ex.getMessage());
         }
     }
 
-    public void CreationDatagramEnvoie(byte[] data, int portServeur, InetAddress adresseServeur)
-    {
+    public void CreationDatagramEnvoie(byte[] data, int portServeur, InetAddress adresseServeur) {
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
@@ -139,8 +133,10 @@ public class Client
         size = size + 2;
 
         // Num bloc
-        System.arraycopy(numBloc, 0, data, size, numBloc.length);
-        size = size + numBloc.length;
+        data[size] = d;
+        size++;
+        data[size] = u;
+        size++;
 
         return data;
     }
@@ -171,12 +167,9 @@ public class Client
         return data;
     }
 
-    public void EnvoiData(DatagramPacket d, InetAddress serveur)
-    {
-        while (true)
-        {
-            try
-            {
+    public void EnvoiData(DatagramPacket d, InetAddress serveur) {
+        while (true) {
+            try {
                 // on envoie
                 datagramSoket.send(d);
                 // on receptionne la réponse
@@ -184,45 +177,36 @@ public class Client
                 byte[] buf ;
                 buf = datagramPacketReception.getData();
                 // si on avait envoyé
-                if (d.getData()[1] == WRQ_OPCODE)
-                {
-                    if (buf[0] == 0 && buf[1] == 4 && 0 == buf[2] && 0 == buf[3])
-                    {
+                if (d.getData()[1] == WRQ_OPCODE) {
+                    if (buf[0] == 0 && buf[1] == 4 && 0 == buf[2] && 0 == buf[3]) {
                         break;
                     }
-                } else if ((d.getData()[1] == DATA_OPCODE))
-                {
-                    if (buf[0] == 0 && buf[1] == 4 && d.getData()[2] == buf[2] && d.getData()[3] == buf[3])
-                    {
+                } else if ((d.getData()[1] == DATA_OPCODE)) {
+                    if (buf[0] == 0 && buf[1] == 4 && d.getData()[2] == buf[2] && d.getData()[3] == buf[3]) {
                         break;
                     }
                 }
-            } catch (SocketTimeoutException e)
-            {
+            } catch (SocketTimeoutException e) {
                 System.err.println("time_out dépassé : " + e.getMessage());
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
     }
 
-    private void EvoieAck(DatagramPacket d, InetAddress serveur)
-    {
-        try
-        {
+    private void EvoieAck(DatagramPacket d, InetAddress serveur) {
+        try {
             byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
-            data[0] = 0;
-            data[1] = 4;
-            data[2] = d.getData()[2];
-            data[3] = d.getData()[3];
+            /*data[0] = 0;
+             data[1] = 4;
+             data[2] = d.getData()[2];
+             data[3] = d.getData()[3];*/
+            data = CreatPaquet_ACK(4, d.getData()[2], d.getData()[3]);
             datagramSoket.send(new DatagramPacket(data, data.length, serveur, portServeur));
-        } catch (UnsupportedEncodingException ex)
-        {
+        } catch (UnsupportedEncodingException ex) {
             System.err.println(ex.getMessage());
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
     }
@@ -231,13 +215,10 @@ public class Client
     // 1 = impossible de lire le fichier parce qu'il n'existe pas ou qu'on n'a pas les droits
     // 2 = impossibe de lire le fichier a cause de l'encodage
     // 3 = problème d'entrée/sortie
-    public int SendFile(File fichier, InetAddress serveur)
-    {
-        try
-        {
+    public int SendFile(File fichier, InetAddress serveur) {
+        try {
             //vérification des droits et de l'existance du fichier
-            if (fichier.canRead())
-            {
+            if (fichier.canRead()) {
                 FileInputStream monFileInputStream = new FileInputStream(fichier);
                 byte[] data ;
                 String temp = new String();
@@ -256,13 +237,10 @@ public class Client
                 byte u = 1;
                 byte d = 0;
 
-                for (int i = 0; i < fichier.length(); i++)
-                {
-                    if (monFileInputStream.available() >= BLOCK_SIZE)
-                    {
+                for (int i = 0; i < fichier.length(); i++) {
+                    if (monFileInputStream.available() >= BLOCK_SIZE) {
                         monFileInputStream.read(data, 4, BLOCK_SIZE);
-                    } else
-                    {
+                    } else {
                         int a = monFileInputStream.available();
                         data = new byte[a + 4];
                         monFileInputStream.read(data, 0, a);
@@ -287,34 +265,28 @@ public class Client
                     {
                         u = 0;
                         d++;
-                    } else
-                    {
+                    } else {
                         u++;
                     }
 
                 }
             }
 
-        } catch (SecurityException ex)
-        {
+        } catch (SecurityException ex) {
             System.err.println(ex.getMessage());
             return 1;
-        } catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             System.err.println(e.getMessage());
             return 2;
-        } catch (IOException exe)
-        {
+        } catch (IOException exe) {
             System.err.println(exe.getMessage());
             return 3;
         }
         return 0;
     }
 
-    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin)
-    {
-        try
-        {
+    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin) {
+        try {
             byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
             String user = System.getProperty("user.name");
@@ -331,19 +303,16 @@ public class Client
             temp += datagramPacketReception.getData();
             EvoieAck(datagramPacketReception, serveur);
 
-            while (datagramPacketReception.getData().length == BLOCK_SIZE)
-            {
+            while (datagramPacketReception.getData().length == BLOCK_SIZE) {
                 datagramSoket.receive(datagramPacketReception);
                 temp += datagramPacketReception.getData();
                 EvoieAck(datagramPacketReception, serveur);
             }
             writer.append(temp);
-        } catch (UnsupportedEncodingException ex)
-        {
+        } catch (UnsupportedEncodingException ex) {
             System.err.println(ex.getMessage());
             return 1;
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return 2;
         }
