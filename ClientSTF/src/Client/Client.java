@@ -122,7 +122,7 @@ public class Client {
         return data;
     }
 
-    public byte[] CreatPaquet_ACK(int codeOp, byte[] numBloc)
+    public byte[] CreatPaquet_ACK(int codeOp,byte d, byte u)
     {
         int size = 0;
         byte[] data = new byte[4];
@@ -282,6 +282,7 @@ public class Client {
             System.err.println(exe.getMessage());
             return 3;
         }
+        portServeur = 69;
         return 0;
     }
 
@@ -289,8 +290,7 @@ public class Client {
         try {
             byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
-            String user = System.getProperty("user.name");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(chemin + nomLocal)));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(chemin)));
             // demande pour envoyer un fichier et acknowlege
             data = CreatPaquet_RRQ_WRQ(RRQ_OPCODE, nomDistant, BINARY_MODE);
             /*data = temp = "01" + nomDistant + "0ctet0";
@@ -316,6 +316,7 @@ public class Client {
             System.err.println(ex.getMessage());
             return 2;
         }
+        portServeur= 69;
         return 0;
     }
 
