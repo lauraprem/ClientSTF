@@ -31,15 +31,35 @@ public class Client
     private DatagramPacket datagramPacketReception;
     private DatagramPacket datagramPacketEnvoie;
     private int portServeur;
+    
+    // Constantes spécifiques du protocole TFTP
+    // Codes des opérations TFTP
+    private final static byte RRQ_OPCODE = 1; // Requête lecture
+    private final static byte WRQ_OPCODE = 2; // Requête écriture
+    private final static byte DATA_OPCODE = 3; // Transmission
+    private final static byte ACK_OPCODE = 4; // Acquittement
+    private final static byte ERROR_OPCODE = 5; // Erreur
+    // Codes des erreurs TFTP
+    private final static byte NOTDEF_ERROR = 0;
+    private final static byte FILE_NOT_FOUND_ERROR = 1;
+    private final static byte ACCESS_VIOLATION_ERROR = 2;
+    // Taille des entêtes TFTP
+    private final static int HEADER_SIZE = 4;
+    // Constante pour le mode de transfert
+    private final static String BINARY_MODE = "octet";
+    // Taille maximale d'un bloc de données
+    private final static int BLOCK_SIZE = 512;
 
     // CONSTRUCTEUR
     public Client()
     {
         initSocket();
-        byte[] data = new byte[512];
+        
+        //?????//
+        byte[] data = new byte[BLOCK_SIZE];
         datagramPacketEnvoie = new DatagramPacket(data, data.length);
         portServeur = 69;
-        byte[] buffer = new byte[512];
+        byte[] buffer = new byte[BLOCK_SIZE];
         datagramPacketReception = new DatagramPacket(buffer, buffer.length);
     }
 
@@ -62,6 +82,97 @@ public class Client
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
+     // Paquets
+    public byte[] CreatPaquet_RRQ_WRQ(int codeOp, String nomFichier, String mode) {
+        int size = 0;
+        byte[] data = new byte[BLOCK_SIZE];
+
+        // Code Op
+        data[0] = 0;
+        data[1] = (byte) codeOp;
+        size = size + 2;
+
+        // Nom fichier
+        System.arraycopy(nomFichier.getBytes(), 0, data, size, nomFichier.getBytes().length);
+        size = size + nomFichier.getBytes().length;
+
+        // 0
+        data[size] = 0;
+        size++;
+
+        // Mode
+        System.arraycopy(mode.getBytes(), 0, data, size, mode.getBytes().length);
+        size = size + mode.getBytes().length;
+
+        // 0
+        data[size] = 0;
+        size++;
+
+        return data;
+    }
+
+    public byte[] CreatPaquet_DATA(int codeOp,byte d ,byte u, byte[] donnees) {
+        int size = 0;
+        byte[] data = new byte[donnees.length + 4];
+
+        // Code Op
+        data[0] = 0;
+        data[1] = (byte) codeOp;
+        size = size + 2;
+
+        // Num bloc
+         data[size] = d;
+         size++;
+         data[size] = u;
+                 
+        // Donnees
+        System.arraycopy(donnees, 0, data, size, donnees.length);
+        size = size + donnees.length;
+
+        return data;
+    }
+
+    public byte[] CreatPaquet_ACK(int codeOp, byte[] numBloc) {
+        int size = 0;
+        byte[] data = new byte[4];
+
+        // Code Op
+        data[0] = 0;
+        data[1] = (byte) codeOp;
+        size = size + 2;
+
+        // Num bloc
+        System.arraycopy(numBloc, 0, data, size, numBloc.length);
+        size = size + numBloc.length;
+
+        return data;
+    }
+
+    public byte[] CreatPaquet_ERROR(int codeOp, int codeErreur, String msgErreur) {
+        int size = 0;
+        byte[] data = new byte[4];
+
+        // Code Op
+        data[0] = 0;
+        data[1] = (byte) codeOp;
+        size = size + 2;
+
+        // Code Erreur
+        data[2] = 0;
+        data[3] = (byte) codeErreur;
+        size = size + 2;
+
+        // Message erreur
+        System.arraycopy(msgErreur.getBytes(), 0, data, size, msgErreur.getBytes().length);
+        size = size + msgErreur.getBytes().length;
+
+        // 0
+        data[msgErreur.getBytes().length] = 0;
+        size++;
+
+        return data;
+    }
+
     public void EnvoiData(DatagramPacket d, InetAddress serveur)
     {
         while (true)
@@ -72,16 +183,16 @@ public class Client
                 datagramSoket.send(d);
                 // on receptionne la réponse
                 datagramSoket.receive(datagramPacketReception);
-                byte[] buf = new byte[512];
+                byte[] buf = new byte[BLOCK_SIZE];
                 buf = datagramPacketReception.getData();
                 // si on avait envoyé
-                if (d.getData()[1] == 2)
+                if (d.getData()[1] == WRQ_OPCODE)
                 {
                     if (buf[0] == 0 && buf[1] == 4 && 0 == buf[2] && 0 == buf[3])
                     {
                         break;
                     }
-                } else if ((d.getData()[1] == 3))
+                } else if ((d.getData()[1] == DATA_OPCODE))
                 {
                     if (buf[0] == 0 && buf[1] == 4 && d.getData()[2] == buf[2] && d.getData()[3] == buf[3])
                     {
@@ -102,7 +213,7 @@ public class Client
     {
         try
         {
-            byte[] data = new byte[512];
+            byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
             data[0] = 0;
             data[1] = 4;
@@ -130,17 +241,18 @@ public class Client
             if (fichier.canRead())
             {
                 FileInputStream monFileInputStream = new FileInputStream(fichier);
-                byte[] data = new byte[512];
+                byte[] data = new byte[BLOCK_SIZE];
                 String temp = new String();
 
                 // demande pour envoyer un fichier et acknowlege 
-                temp = "octet";
-                data[0] = 0;
-                data[1] = 2;
-                System.arraycopy(fichier.getName().getBytes(), 0, data, 2, fichier.getName().getBytes().length);
-                data[fichier.getName().getBytes().length + 2] = 0;
-                System.arraycopy(temp.getBytes(), 0, data, fichier.getName().getBytes().length + 3, temp.getBytes().length);
-                data[fichier.getName().getBytes().length + 3 + temp.getBytes().length] = 0;
+                data = CreatPaquet_RRQ_WRQ(WRQ_OPCODE, fichier.getName(), BINARY_MODE);
+//                temp = "octet";
+//                data[0] = 0;
+//                data[1] = 2;
+//                System.arraycopy(fichier.getName().getBytes(), 0, data, 2, fichier.getName().getBytes().length);
+//                data[fichier.getName().getBytes().length + 2] = 0;
+//                System.arraycopy(temp.getBytes(), 0, data, fichier.getName().getBytes().length + 3, temp.getBytes().length);
+//                data[fichier.getName().getBytes().length + 3 + temp.getBytes().length] = 0;
                 CreationDatagramEnvoie(data, portServeur, serveur);
                 EnvoiData(datagramPacketEnvoie, serveur);
                 portServeur = datagramPacketReception.getPort();
@@ -154,27 +266,27 @@ public class Client
 
                 for (int i = 0; i < fichier.length(); i++)
                 {
-                    if (monFileInputStream.available() >= 512)
+                    if (monFileInputStream.available() >= BLOCK_SIZE)
                     {
-                        monFileInputStream.read(data, 4, 512);
+                        monFileInputStream.read(data, 4, BLOCK_SIZE);
                     } else
                     {
                         int a = monFileInputStream.available();
                         data = new byte[a + 4];
-                        monFileInputStream.read(data, 4, a);
-                        data[0] = 0;
-                        data[1] = 3;
-                        data[2] = d;
-                        data[3] = u;
+                        monFileInputStream.read(data, 0, a);
+                        /*data[0] = 0;
+                        data[1] = 3;*/
+                        data = CreatPaquet_DATA(DATA_OPCODE,d, u,data);
                         CreationDatagramEnvoie(data, portServeur, serveur);
                         EnvoiData(datagramPacketEnvoie, serveur);
                         break;
 
                     }
-                    data[0] = 0;
+                    /*data[0] = 0;
                     data[1] = 3;
                     data[2] = d;
-                    data[3] = u;
+                    data[3] = u;*/
+                    data = CreatPaquet_DATA(DATA_OPCODE,d, u,data);
                     CreationDatagramEnvoie(data, portServeur, serveur);
                     EnvoiData(datagramPacketEnvoie, serveur);
                     buffer = new String();
@@ -211,13 +323,14 @@ public class Client
     {
         try
         {
-            byte[] data = new byte[512];
+            byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
             String user = System.getProperty("user.name");
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(chemin + nomLocal)));
             // demande pour envoyer un fichier et acknowlege
-            temp = "01" + nomDistant + "0ctet0";
-            data = temp.getBytes("octet");
+            data = CreatPaquet_RRQ_WRQ(RRQ_OPCODE, nomDistant, BINARY_MODE);
+            /*data = temp = "01" + nomDistant + "0ctet0";
+            data = temp.getBytes("octet");*/
             CreationDatagramEnvoie(data, portServeur, serveur);
             datagramSoket.send(datagramPacketEnvoie);
             portServeur = datagramPacketReception.getPort();
@@ -226,7 +339,7 @@ public class Client
             temp += datagramPacketReception.getData();
             EvoieAck(datagramPacketReception, serveur);
 
-            while (datagramPacketReception.getData().length == 512)
+            while (datagramPacketReception.getData().length == BLOCK_SIZE)
             {
                 datagramSoket.receive(datagramPacketReception);
                 temp += datagramPacketReception.getData();
