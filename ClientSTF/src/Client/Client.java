@@ -104,10 +104,10 @@ public class Client
         {
             byte[] data = new byte[512];
             String temp = new String();
-
-            // demande pour envoyer un fichier et acknowlege
-            temp = "04" + d.getData()[2] + d.getData()[3];
-            data = temp.getBytes("octet");
+            data[0] = 0;
+            data[1] = 4;
+            data[2] = d.getData()[2];
+            data[3] = d.getData()[3];
             datagramSoket.send(new DatagramPacket(data, data.length, serveur, portServeur));
         } catch (UnsupportedEncodingException ex)
         {
@@ -129,43 +129,64 @@ public class Client
             //vérification des droits et de l'existance du fichier
             if (fichier.canRead())
             {
-                FileReader monFileReader = new FileReader(fichier);
+                FileInputStream monFileInputStream = new FileInputStream(fichier);
                 byte[] data = new byte[512];
                 String temp = new String();
 
                 // demande pour envoyer un fichier et acknowlege 
-                temp = "02" + fichier.getName() + "0ctet0";
-                data = temp.getBytes("octet");
+                temp = "octet";
+                data[0] = 0;
+                data[1] = 2;
+                System.arraycopy(fichier.getName().getBytes(), 0, data, 2, fichier.getName().getBytes().length);
+                data[fichier.getName().getBytes().length + 2] = 0;
+                System.arraycopy(temp.getBytes(), 0, data, fichier.getName().getBytes().length + 3, temp.getBytes().length);
+                data[fichier.getName().getBytes().length + 3 + temp.getBytes().length] = 0;
                 CreationDatagramEnvoie(data, portServeur, serveur);
                 EnvoiData(datagramPacketEnvoie, serveur);
                 portServeur = datagramPacketReception.getPort();
 
                 // Envoie du fichier
-                data = new byte[512];
-                temp = new String();
+                data = new byte[516];
                 String buffer = new String();
                 //numérotation des datagrammes
-                int n = 1;
+                byte u = 1;
+                byte d = 0;
 
                 for (int i = 0; i < fichier.length(); i++)
                 {
-                    for (int j = 0; j < 512 && monFileReader.ready(); j++)
+                    if (monFileInputStream.available() >= 512)
                     {
-                        buffer += monFileReader.read();
-                    }
-                    monFileReader.mark(i);
-                    if (n < 10)
-                    {
-                        temp = "0" + n + buffer;
+                        monFileInputStream.read(data, 4, 512);
                     } else
                     {
-                        temp = n + buffer;
+                        int a = monFileInputStream.available();
+                        data = new byte[a + 4];
+                        monFileInputStream.read(data, 4, a);
+                        data[0] = 0;
+                        data[1] = 3;
+                        data[2] = d;
+                        data[3] = u;
+                        CreationDatagramEnvoie(data, portServeur, serveur);
+                        EnvoiData(datagramPacketEnvoie, serveur);
+                        break;
+
                     }
-                    data = temp.getBytes("octet");
+                    data[0] = 0;
+                    data[1] = 3;
+                    data[2] = d;
+                    data[3] = u;
                     CreationDatagramEnvoie(data, portServeur, serveur);
                     EnvoiData(datagramPacketEnvoie, serveur);
                     buffer = new String();
-                    n++;
+                    data = new byte[516];
+                    if (u == 9)
+                    {
+                        u = 0;
+                        d++;
+                    } else
+                    {
+                        u++;
+                    }
 
                 }
             }
