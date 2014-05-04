@@ -1,11 +1,14 @@
 /* FAGNO CORINNE */
 package Client;
 
+import com.sun.swing.internal.plaf.basic.resources.basic;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -17,10 +20,11 @@ import java.net.SocketTimeoutException;
  *
  * @author Corinne
  */
-public class Client {
+public class Client
+{
 
     // ATTRIBUTS
-    private DatagramSocket datagramSoket;
+    private DatagramSocket datagramSocket;
     private DatagramPacket datagramPacketReception;
     private DatagramPacket datagramPacketEnvoie;
     private int portServeur;
@@ -44,29 +48,34 @@ public class Client {
     private final static int BLOCK_SIZE = 512;
 
     // CONSTRUCTEUR
-    public Client() {
+    public Client()
+    {
         initSocket();
 
         //?????//
         byte[] data = new byte[BLOCK_SIZE];
         datagramPacketEnvoie = new DatagramPacket(data, data.length);
         portServeur = 69;
-        byte[] buffer = new byte[BLOCK_SIZE];
+        byte[] buffer = new byte[BLOCK_SIZE + 4];
         datagramPacketReception = new DatagramPacket(buffer, buffer.length);
     }
 
     // METHODES
-    public void initSocket() {
+    public void initSocket()
+    {
         int SO_TIMEOUT = 180000; // 3 minutes
-        try {
-            datagramSoket = new DatagramSocket();
-            datagramSoket.setSoTimeout(SO_TIMEOUT);
-        } catch (SocketException ex) {
+        try
+        {
+            datagramSocket = new DatagramSocket();
+            datagramSocket.setSoTimeout(SO_TIMEOUT);
+        } catch (SocketException ex)
+        {
             System.err.println("Port déjà occupé : " + ex.getMessage());
         }
     }
 
-    public void CreationDatagramEnvoie(byte[] data, int portServeur, InetAddress adresseServeur) {
+    public void CreationDatagramEnvoie(byte[] data, int portServeur, InetAddress adresseServeur)
+    {
         datagramPacketEnvoie = new DatagramPacket(data, data.length, adresseServeur, portServeur);
     }
 
@@ -100,7 +109,7 @@ public class Client {
         return data;
     }
 
-    public byte[] CreatPaquet_DATA(int codeOp, byte d, byte u, byte[] donnees)
+    public byte[] CreatPaquet_DATA(int codeOp, int i, byte[] donnees)
     {
         int size = 0;
         byte[] data = new byte[donnees.length + 4];
@@ -111,10 +120,13 @@ public class Client {
         size += 2;
 
         // Num bloc
-        data[size] = d;
-        size++;
-        data[size] = u;
-        size++;
+       /* data[size] = d;
+         size++;
+         data[size] = u;
+         size++;*/
+        data[2] = (byte) (i >> 8);
+        data[3] = (byte) (i);
+        size += 2;
         // Donnees
         System.arraycopy(donnees, 0, data, size, donnees.length);
         size = size + donnees.length;
@@ -122,7 +134,7 @@ public class Client {
         return data;
     }
 
-    public byte[] CreatPaquet_ACK(int codeOp,byte d, byte u)
+    public byte[] CreatPaquet_ACK(int codeOp, byte d, byte u)
     {
         int size = 0;
         byte[] data = new byte[4];
@@ -167,46 +179,55 @@ public class Client {
         return data;
     }
 
-    public void EnvoiData(DatagramPacket d, InetAddress serveur) {
-        while (true) {
-            try {
+    public void EnvoiData(DatagramPacket d, InetAddress serveur)
+    {
+        while (true)
+        {
+            try
+            {
                 // on envoie
-                datagramSoket.send(d);
+                datagramSocket.send(d);
                 // on receptionne la réponse
-                datagramSoket.receive(datagramPacketReception);
-                byte[] buf ;
+                datagramSocket.receive(datagramPacketReception);
+                byte[] buf;
                 buf = datagramPacketReception.getData();
                 // si on avait envoyé
-                if (d.getData()[1] == WRQ_OPCODE) {
-                    if (buf[0] == 0 && buf[1] == 4 && 0 == buf[2] && 0 == buf[3]) {
+                if (d.getData()[1] == WRQ_OPCODE)
+                {
+                    if (buf[0] == 0 && buf[1] == 4 && 0 == buf[2] && 0 == buf[3])
+                    {
                         break;
                     }
-                } else if ((d.getData()[1] == DATA_OPCODE)) {
-                    if (buf[0] == 0 && buf[1] == 4 && d.getData()[2] == buf[2] && d.getData()[3] == buf[3]) {
+                } else if ((d.getData()[1] == DATA_OPCODE))
+                {
+                    if (buf[0] == 0 && buf[1] == 4 && d.getData()[2] == buf[2] && d.getData()[3] == buf[3])
+                    {
                         break;
                     }
                 }
-            } catch (SocketTimeoutException e) {
+            } catch (SocketTimeoutException e)
+            {
                 System.err.println("time_out dépassé : " + e.getMessage());
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 System.err.println(e.getMessage());
             }
         }
     }
 
-    private void EvoieAck(DatagramPacket d, InetAddress serveur) {
-        try {
+    private void EvoieAck(DatagramPacket d, InetAddress serveur)
+    {
+        try
+        {
             byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
-            /*data[0] = 0;
-             data[1] = 4;
-             data[2] = d.getData()[2];
-             data[3] = d.getData()[3];*/
             data = CreatPaquet_ACK(4, d.getData()[2], d.getData()[3]);
-            datagramSoket.send(new DatagramPacket(data, data.length, serveur, portServeur));
-        } catch (UnsupportedEncodingException ex) {
+            datagramSocket.send(new DatagramPacket(data, data.length, serveur, portServeur));
+        } catch (UnsupportedEncodingException ex)
+        {
             System.err.println(ex.getMessage());
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             System.err.println(ex.getMessage());
         }
     }
@@ -215,12 +236,15 @@ public class Client {
     // 1 = impossible de lire le fichier parce qu'il n'existe pas ou qu'on n'a pas les droits
     // 2 = impossibe de lire le fichier a cause de l'encodage
     // 3 = problème d'entrée/sortie
-    public int SendFile(File fichier, InetAddress serveur) {
-        try {
+    public int SendFile(File fichier, InetAddress serveur)
+    {
+        try
+        {
             //vérification des droits et de l'existance du fichier
-            if (fichier.canRead()) {
+            if (fichier.canRead())
+            {
                 FileInputStream monFileInputStream = new FileInputStream(fichier);
-                byte[] data ;
+                byte[] data;
                 String temp = new String();
 
                 // demande pour envoyer un fichier et acknowlege 
@@ -231,54 +255,48 @@ public class Client {
                 portServeur = datagramPacketReception.getPort();
 
                 // Envoie du fichier
-                data = new byte[516];
+                data = new byte[512];
                 String buffer = new String();
                 //numérotation des datagrammes
-                byte u = 1;
-                byte d = 0;
+                int index = 1;
 
-                for (int i = 0; i < fichier.length(); i++) {
-                    if (monFileInputStream.available() >= BLOCK_SIZE) {
-                        monFileInputStream.read(data, 4, BLOCK_SIZE);
-                    } else {
+                for (int i = 0; i < fichier.length(); i++)
+                {
+                    if (monFileInputStream.available() >= BLOCK_SIZE)
+                    {
+                        monFileInputStream.read(data, 0, BLOCK_SIZE);
+                    } else
+                    {
                         int a = monFileInputStream.available();
-                        data = new byte[a + 4];
+                        data = new byte[a];
                         monFileInputStream.read(data, 0, a);
                         /*data[0] = 0;
                          data[1] = 3;*/
-                        data = CreatPaquet_DATA(DATA_OPCODE, d, u, data);
+                        data = CreatPaquet_DATA(DATA_OPCODE, index, data);
                         CreationDatagramEnvoie(data, portServeur, serveur);
                         EnvoiData(datagramPacketEnvoie, serveur);
                         break;
 
                     }
-                    data = CreatPaquet_DATA(DATA_OPCODE, d, u, data);
+                    data = CreatPaquet_DATA(DATA_OPCODE, index, data);
                     CreationDatagramEnvoie(data, portServeur, serveur);
                     EnvoiData(datagramPacketEnvoie, serveur);
                     buffer = new String();
-                    data = new byte[516];
-                    if (u == 9 && d == 9)
-                    {
-                        u = 1;
-                        d = 0;
-                    } else if (u == 9)
-                    {
-                        u = 0;
-                        d++;
-                    } else {
-                        u++;
-                    }
-
+                    data = new byte[512];
+                    index++;
                 }
             }
 
-        } catch (SecurityException ex) {
+        } catch (SecurityException ex)
+        {
             System.err.println(ex.getMessage());
             return 1;
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e)
+        {
             System.err.println(e.getMessage());
             return 2;
-        } catch (IOException exe) {
+        } catch (IOException exe)
+        {
             System.err.println(exe.getMessage());
             return 3;
         }
@@ -286,39 +304,49 @@ public class Client {
         return 0;
     }
 
-    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin) {
-        try {
+    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin)
+    {
+        try
+        {
             byte[] data = new byte[BLOCK_SIZE];
             String temp = new String();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(chemin)));
+            File fichier = new File(chemin + "/" + nomLocal);
+            if (!fichier.exists())
+            {
+                fichier.createNewFile();
+            }
+            FileOutputStream monFileOutputStream = new FileOutputStream(fichier, true);
             // demande pour envoyer un fichier et acknowlege
             data = CreatPaquet_RRQ_WRQ(RRQ_OPCODE, nomDistant, BINARY_MODE);
-            /*data = temp = "01" + nomDistant + "0ctet0";
-             data = temp.getBytes("octet");*/
             CreationDatagramEnvoie(data, portServeur, serveur);
-            datagramSoket.send(datagramPacketEnvoie);
-            portServeur = datagramPacketReception.getPort();
-            datagramSoket.receive(datagramPacketReception);
-            temp = new String();
-            temp += datagramPacketReception.getData();
-            EvoieAck(datagramPacketReception, serveur);
+            datagramSocket.send(datagramPacketEnvoie);
 
-            while (datagramPacketReception.getData().length == BLOCK_SIZE) {
-                datagramSoket.receive(datagramPacketReception);
-                temp += datagramPacketReception.getData();
+            datagramSocket.receive(datagramPacketReception);
+            portServeur = datagramPacketReception.getPort();
+            data = new byte[datagramPacketReception.getLength() - 4];
+            EvoieAck(datagramPacketReception, serveur);
+            System.arraycopy(datagramPacketReception.getData(), 4, data, 0, datagramPacketReception.getLength() - 4);
+
+            monFileOutputStream.write(data);
+            while (datagramPacketReception.getLength() == BLOCK_SIZE + 4)
+            {
+                datagramSocket.receive(datagramPacketReception);
+                data = new byte[datagramPacketReception.getLength() - 4];
                 EvoieAck(datagramPacketReception, serveur);
+                System.arraycopy(datagramPacketReception.getData(), 4, data, 0, datagramPacketReception.getLength() - 4);
+                monFileOutputStream.write(data);
             }
-            writer.append(temp);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex)
+        {
             System.err.println(ex.getMessage());
             return 1;
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             System.err.println(ex.getMessage());
             return 2;
         }
-        portServeur= 69;
+        portServeur = 69;
         return 0;
     }
-
 
 }
