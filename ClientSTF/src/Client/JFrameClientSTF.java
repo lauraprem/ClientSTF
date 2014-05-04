@@ -400,7 +400,9 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JFrameClientSTF().setVisible(true);
+                JFrameClientSTF jf = new JFrameClientSTF();
+                jf.setLocationRelativeTo(null);
+                jf.setVisible(true);
             }
         });
     }
