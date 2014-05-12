@@ -498,7 +498,6 @@ public class Client
             resEnvoie = EnvoiDatagram(data, portServeur, serveur);
             if (resEnvoie != 0)
             {
-                fichier.delete();
                 return resEnvoie;
             }
 

@@ -24,6 +24,83 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void AffichageMSGInformation(int codeErreur) {
+        switch (codeErreur) {
+            case 0:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Le fichier a bien été envoyé !",
+                        "Information : Envoie de fichier",
+                        JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Fichier non trouvé !",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 2:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Violation de l'accès !",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 3:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Disque plein ou dépassement de l'espace alloué",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 4:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Opération TFTP illégale",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 5:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Transfert ID inconnu",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 6:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Le fichier existe déjà",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 7:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Utilisateur inconnu",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 8:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Fichier non trouvé ou violation de l'accès !",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 9:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Impossible de lire le fichier (problème d'encodage)",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 10:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Problème d'Entré / Sortie",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            default:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Erreur non identifié",
+                        "Erreur : Envoie de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,8 +119,8 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jPanelSendfile = new javax.swing.JPanel();
         jButtonSendfile = new javax.swing.JButton();
         jLabelNomFichier = new javax.swing.JLabel();
-        jTextFieldNomFichier = new javax.swing.JTextField();
         jButtonSelect = new javax.swing.JButton();
+        jLabelAddressFile = new javax.swing.JLabel();
         jPanelReceive = new javax.swing.JPanel();
         jButtonReceivefile = new javax.swing.JButton();
         jLabelFichierDistant = new javax.swing.JLabel();
@@ -54,9 +131,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jTextFieldCheminEnrg = new javax.swing.JTextField();
         jButtonSelectDossier = new javax.swing.JButton();
 
-        jDialogErreur.setMaximumSize(new java.awt.Dimension(400, 150));
         jDialogErreur.setMinimumSize(new java.awt.Dimension(400, 150));
-        jDialogErreur.setPreferredSize(new java.awt.Dimension(400, 150));
         jDialogErreur.setResizable(false);
 
         javax.swing.GroupLayout jDialogErreurLayout = new javax.swing.GroupLayout(jDialogErreur.getContentPane());
@@ -105,9 +180,6 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jLabelNomFichier.setText("Adresse du fichier :");
         jLabelNomFichier.setName("jLabelNomFichier"); // NOI18N
 
-        jTextFieldNomFichier.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTextFieldNomFichier.setName("jTextFieldNomFichier"); // NOI18N
-
         jButtonSelect.setText("Select.");
         jButtonSelect.setToolTipText("");
         jButtonSelect.setName("jButtonSelect"); // NOI18N
@@ -117,23 +189,23 @@ public class JFrameClientSTF extends javax.swing.JFrame {
             }
         });
 
+        jLabelAddressFile.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
         javax.swing.GroupLayout jPanelSendfileLayout = new javax.swing.GroupLayout(jPanelSendfile);
         jPanelSendfile.setLayout(jPanelSendfileLayout);
         jPanelSendfileLayout.setHorizontalGroup(
             jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSendfileLayout.createSequentialGroup()
-                .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelSendfileLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabelNomFichier)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextFieldNomFichier, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelAddressFile, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSelect))
-                    .addGroup(jPanelSendfileLayout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(jButtonSendfile)))
-                .addContainerGap(84, Short.MAX_VALUE))
+                    .addComponent(jButtonSendfile))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanelSendfileLayout.setVerticalGroup(
             jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,8 +213,8 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 .addContainerGap(74, Short.MAX_VALUE)
                 .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNomFichier)
-                    .addComponent(jTextFieldNomFichier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSelect))
+                    .addComponent(jButtonSelect)
+                    .addComponent(jLabelAddressFile))
                 .addGap(36, 36, 36)
                 .addComponent(jButtonSendfile)
                 .addGap(38, 38, 38))
@@ -260,12 +332,13 @@ public class JFrameClientSTF extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SendFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendFileActionPerformed
-        int codeErreur;
 
         if (fichier != null && !jTextFieldAdressServer.getText().equals("")) {
             try {
+                int crem;
                 InetAddress AdressServeur = InetAddress.getByName(jTextFieldAdressServer.getText());
-                codeErreur = client.SendFile(fichier, AdressServeur);
+                crem = client.SendFile(fichier, AdressServeur);
+                AffichageMSGInformation(crem);
             } catch (UnknownHostException ex) {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "L'adresse du Serveur est inconnue.",
@@ -273,7 +346,6 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                         JOptionPane.WARNING_MESSAGE);
             }
 
-            //Traitement code erreur /////// a faire //voir plutot erreur dans client.java
         } else {
             if (jTextFieldAdressServer.getText().equals("")) {
                 JOptionPane.showMessageDialog(jDialogErreur,
@@ -292,8 +364,10 @@ public class JFrameClientSTF extends javax.swing.JFrame {
     private void ReceiveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiveFileActionPerformed
         if (!jTextFieldCheminEnrg.getText().equals("") && !jTextFieldAdressServer.getText().equals("") && !jTextFieldFichierDistant.getText().equals("") && !jTextFieldFichierLocal.getText().equals("")) {
             try {
+                int crrv;
                 InetAddress AdressServeur = InetAddress.getByName(jTextFieldAdressServer.getText());
-                client.ReceiveFile(jTextFieldFichierLocal.getText(), jTextFieldFichierDistant.getText(), AdressServeur, jTextFieldCheminEnrg.getText());
+                crrv = client.ReceiveFile(jTextFieldFichierLocal.getText(), jTextFieldFichierDistant.getText(), AdressServeur, jTextFieldCheminEnrg.getText());
+                AffichageMSGInformation(crrv);
             } catch (UnknownHostException ex) {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "L'adresse du Serveur est inconnue.",
@@ -341,10 +415,10 @@ public class JFrameClientSTF extends javax.swing.JFrame {
             fichier = jFileChooser.getSelectedFile();
 
             // Affichage du fichier selectionne
-            jTextFieldNomFichier.setText(fichier.getAbsolutePath());
+            jLabelAddressFile.setText(fichier.getAbsolutePath());
         } else {
             fichier = null;
-            jTextFieldNomFichier.setText("");
+            jLabelAddressFile.setText("");
         }
     }//GEN-LAST:event_SelectFileActionPerformed
 
@@ -414,6 +488,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSendfile;
     private javax.swing.JDialog jDialogErreur;
     private javax.swing.JFileChooser jFileChooser;
+    private javax.swing.JLabel jLabelAddressFile;
     private javax.swing.JLabel jLabelAdresseServer;
     private javax.swing.JLabel jLabelCheminEnrg;
     private javax.swing.JLabel jLabelFichierDistant;
@@ -427,6 +502,5 @@ public class JFrameClientSTF extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldCheminEnrg;
     private javax.swing.JTextField jTextFieldFichierDistant;
     private javax.swing.JTextField jTextFieldFichierLocal;
-    private javax.swing.JTextField jTextFieldNomFichier;
     // End of variables declaration//GEN-END:variables
 }
