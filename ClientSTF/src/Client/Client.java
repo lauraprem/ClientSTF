@@ -308,10 +308,10 @@ public class Client
             {
                 // on envoie
                 datagramSocket.send(datagramPacketEnvoie);
-         return 0;
+                return 0;
                 // on receptionne la réponse
                /* datagramSocket.receive(datagramPacketReception);
-                return 0;
+                 return 0;
                  buf = datagramPacketReception.getData();
                  
                  if (buf[0] == 0 && buf[1] == DATA_OPCODE && datagramPacketEnvoie.getData()[2]  == buf[2]+1 && datagramPacketEnvoie.getData()[3]  == buf[3]+1)
@@ -321,7 +321,7 @@ public class Client
                  {
                  return buf[3];
                  }
-*/
+                 */
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
@@ -492,8 +492,7 @@ public class Client
             {
                 return 6;
             }
-            fichier.createNewFile();
-            FileOutputStream monFileOutputStream = new FileOutputStream(fichier, true);
+
             // demande pour envoyer un fichier
             data = CreatPaquet_RRQ_WRQ(RRQ_OPCODE, nomDistant, BINARY_MODE);
             resEnvoie = EnvoiDatagram(data, portServeur, serveur);
@@ -502,18 +501,20 @@ public class Client
                 fichier.delete();
                 return resEnvoie;
             }
-    
+
             portServeur = datagramPacketReception.getPort();
-   data = CreatPaquet_ACK(datagramPacketReception.getData()[2], datagramPacketReception.getData()[3]);
-                resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-                if (resEnvoie != 0)
-                {
-                    return resEnvoie;
-                }
+            data = CreatPaquet_ACK(datagramPacketReception.getData()[2], datagramPacketReception.getData()[3]);
+            resEnvoie = EnvoiDatagram(data, portServeur, serveur);
+            if (resEnvoie != 0)
+            {
+                return resEnvoie;
+            }
             // on résupère le premier datagram de données
             data = new byte[datagramPacketReception.getLength() - HEADER_SIZE];
             System.arraycopy(datagramPacketReception.getData(), HEADER_SIZE, data, 0, datagramPacketReception.getLength() - HEADER_SIZE);
             //Ecriture dans le fichier des premières données
+            fichier.createNewFile();
+            FileOutputStream monFileOutputStream = new FileOutputStream(fichier, true);
             monFileOutputStream.write(data);
             //tant que le bloc que l'on reçoit contient 516 octets (4 d'entete et 512 de données)
             while (datagramPacketReception.getLength() == DATA_SIZE + HEADER_SIZE)
