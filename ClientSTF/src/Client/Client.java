@@ -499,8 +499,10 @@ public class Client
             resEnvoie = EnvoiDatagram(data, portServeur, serveur);
             if (resEnvoie != 0)
             {
+                fichier.delete();
                 return resEnvoie;
             }
+    
             portServeur = datagramPacketReception.getPort();
    data = CreatPaquet_ACK(datagramPacketReception.getData()[2], datagramPacketReception.getData()[3]);
                 resEnvoie = EnvoiDatagram(data, portServeur, serveur);
