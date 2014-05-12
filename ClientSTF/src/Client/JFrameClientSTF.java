@@ -28,7 +28,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         switch (codeErreur) {
             case 0:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Le fichier a bien été envoyé !",
+                        "Le transfert c'est bien effectué !",
                         "Information : Envoie de fichier",
                         JOptionPane.INFORMATION_MESSAGE);
                 break;
