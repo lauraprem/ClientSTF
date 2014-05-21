@@ -28,74 +28,74 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         switch (codeErreur) {
             case 0:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Le transfert c'est bien effectué !",
-                        "Information : Envoie de fichier",
+                        "Le transfert s'est bien effectué !",
+                        "Information : transfert de fichier",
                         JOptionPane.INFORMATION_MESSAGE);
                 break;
             case 1:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Fichier non trouvé !",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 2:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Violation de l'accès !",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 3:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Disque plein ou dépassement de l'espace alloué",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 4:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Opération TFTP illégale",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 5:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Transfert ID inconnu",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 6:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Le fichier existe déjà",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 7:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Utilisateur inconnu",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 8:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Fichier non trouvé ou violation de l'accès !",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 9:
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Impossible de lire le fichier (problème d'encodage)",
-                        "Erreur : Envoie de fichier",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 10:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Problème d'Entré / Sortie",
-                        "Erreur : Envoie de fichier",
+                        "Problème d'Entrée / Sortie",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             default:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Erreur non identifié",
-                        "Erreur : Envoie de fichier",
+                        "Erreur non identifiée",
+                        "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
         }
@@ -156,7 +156,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jLabelTitre.setName("jLabelTitre"); // NOI18N
 
         jLabelAdresseServer.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabelAdresseServer.setText("Adresse Serveur :");
+        jLabelAdresseServer.setText("Serveur :");
         jLabelAdresseServer.setName("jLabelAdresseServer"); // NOI18N
 
         jTextFieldAdressServer.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -167,8 +167,9 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jTabbedPane.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jButtonSendfile.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButtonSendfile.setText("Envoyer le Ficher");
+        jButtonSendfile.setText("Envoyer");
         jButtonSendfile.setToolTipText("");
+        jButtonSendfile.setActionCommand("Envoyer");
         jButtonSendfile.setName("jButtonSendfile"); // NOI18N
         jButtonSendfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,7 +178,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         });
 
         jLabelNomFichier.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabelNomFichier.setText("Adresse du fichier :");
+        jLabelNomFichier.setText("Chemin du fichier :");
         jLabelNomFichier.setName("jLabelNomFichier"); // NOI18N
 
         jButtonSelect.setText("Select.");
@@ -196,33 +197,35 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jPanelSendfileLayout.setHorizontalGroup(
             jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSendfileLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelSendfileLayout.createSequentialGroup()
-                        .addComponent(jLabelNomFichier)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelAddressFile, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSelect))
-                    .addComponent(jButtonSendfile))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelNomFichier)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelAddressFile, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSelect)
+                .addGap(30, 30, 30))
+            .addGroup(jPanelSendfileLayout.createSequentialGroup()
+                .addGap(186, 186, 186)
+                .addComponent(jButtonSendfile)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelSendfileLayout.setVerticalGroup(
             jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSendfileLayout.createSequentialGroup()
-                .addContainerGap(74, Short.MAX_VALUE)
+                .addContainerGap(73, Short.MAX_VALUE)
                 .addGroup(jPanelSendfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelNomFichier)
+                    .addComponent(jLabelNomFichier, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSelect)
-                    .addComponent(jLabelAddressFile))
-                .addGap(36, 36, 36)
+                    .addComponent(jLabelAddressFile, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
                 .addComponent(jButtonSendfile)
-                .addGap(38, 38, 38))
+                .addGap(22, 22, 22))
         );
 
         jTabbedPane.addTab("Envoyer un fichier", jPanelSendfile);
 
-        jButtonReceivefile.setText("Recevoir le Fichier");
+        jButtonReceivefile.setText("Recevoir");
+        jButtonReceivefile.setActionCommand("Recevoir");
         jButtonReceivefile.setName("jButtonReceivefile"); // NOI18N
         jButtonReceivefile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,24 +256,23 @@ public class JFrameClientSTF extends javax.swing.JFrame {
         jPanelReceiveLayout.setHorizontalGroup(
             jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReceiveLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelReceiveLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelFichierLocal)
-                            .addComponent(jLabelCheminEnrg)
-                            .addComponent(jLabelFichierDistant))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldFichierDistant, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldFichierLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonSelectDossier))
-                    .addGroup(jPanelReceiveLayout.createSequentialGroup()
-                        .addGap(157, 157, 157)
-                        .addComponent(jButtonReceivefile)))
+                    .addComponent(jLabelFichierLocal)
+                    .addComponent(jLabelCheminEnrg)
+                    .addComponent(jLabelFichierDistant))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextFieldFichierDistant, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldFichierLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonSelectDossier)
                 .addContainerGap(59, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelReceiveLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonReceivefile)
+                .addGap(186, 186, 186))
         );
         jPanelReceiveLayout.setVerticalGroup(
             jPanelReceiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,9 +290,9 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                     .addComponent(jLabelCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldCheminEnrg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSelectDossier))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(jButtonReceivefile)
-                .addGap(24, 24, 24))
+                .addGap(25, 25, 25))
         );
 
         jLabelFichierDistant.getAccessibleContext().setAccessibleName("");
@@ -306,10 +308,10 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 .addComponent(jLabelTitre)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(64, 64, 64)
                 .addComponent(jLabelAdresseServer)
-                .addGap(42, 42, 42)
-                .addComponent(jTextFieldAdressServer, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jTextFieldAdressServer, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jTabbedPane)
         );
@@ -318,11 +320,11 @@ public class JFrameClientSTF extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelTitre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldAdressServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelAdresseServer))
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabelAdresseServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldAdressServer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
