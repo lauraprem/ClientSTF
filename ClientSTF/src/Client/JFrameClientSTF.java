@@ -100,7 +100,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 break;
             default:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Erreur non identifiée",
+                        "Erreur non identifiée ! \n Verifiez si vous avez rentré des caractères spéciaux dans le nom d'un fichier.",
                         "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
