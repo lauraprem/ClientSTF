@@ -34,19 +34,19 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 break;
             case 1:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Fichier non trouvé !",
+                        "Fichier '"+jTextFieldFichierDistant.getText()+"' est introuvable sur le serveur !",
                         "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 2:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Violation de l'accès !",
+                        "Violation de l'accès sur le serveur",
                         "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
             case 3:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Disque plein ou dépassement de l'espace alloué",
+                        "Disque plein ou dépassement de l'espace alloué sur le serveur",
                         "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
@@ -64,7 +64,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 break;
             case 6:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Le fichier existe déjà",
+                        "Le fichier "+jTextFieldFichierDistant.getText()+" existe déjà sur le Serveur",
                         "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
@@ -88,7 +88,13 @@ public class JFrameClientSTF extends javax.swing.JFrame {
                 break;
             case 10:
                 JOptionPane.showMessageDialog(jDialogErreur,
-                        "Problème d'Entrée / Sortie",
+                        "Le serveur n'est pas joignable",
+                        "Erreur : transfert de fichier",
+                        JOptionPane.WARNING_MESSAGE);
+                break;
+            case 11:
+                JOptionPane.showMessageDialog(jDialogErreur,
+                        "Le nom du fichier local '"+jTextFieldFichierLocal.getText()+"' existe déjà !",
                         "Erreur : transfert de fichier",
                         JOptionPane.WARNING_MESSAGE);
                 break;
@@ -344,7 +350,7 @@ public class JFrameClientSTF extends javax.swing.JFrame {
             } catch (UnknownHostException ex) {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "L'adresse du Serveur est inconnue.",
-                        "Problème : Envoie de fichier",
+                        "Problème : Envoi de fichier",
                         JOptionPane.WARNING_MESSAGE);
             }
 
@@ -352,12 +358,12 @@ public class JFrameClientSTF extends javax.swing.JFrame {
             if (jTextFieldAdressServer.getText().equals("")) {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Vous n'avez pas indiqué l'adresse du Serveur.",
-                        "Problème : Envoie de fichier",
+                        "Problème : Envoi de fichier",
                         JOptionPane.WARNING_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Vous n'avez pas selectionné de fichier.",
-                        "Problème : Envoie de fichier",
+                        "Problème : Envoi de fichier",
                         JOptionPane.WARNING_MESSAGE);
             }
         }
@@ -373,36 +379,39 @@ public class JFrameClientSTF extends javax.swing.JFrame {
             } catch (UnknownHostException ex) {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "L'adresse du Serveur est inconnue.",
-                        "Problème : Envoie de fichier",
+                        "Problème : Envoi de fichier",
                         JOptionPane.WARNING_MESSAGE);
             }
         } else {
             if (jTextFieldAdressServer.getText().equals("")) {
                 JOptionPane.showMessageDialog(jDialogErreur,
                         "Vous n'avez pas indiqué l'adresse du Serveur.",
-                        "Problème : Envoie de fichier",
+                        "Problème : Envoi de fichier",
                         JOptionPane.WARNING_MESSAGE);
-            }
+            } else {
 
-            if (jTextFieldFichierDistant.getText().equals("")) {
-                JOptionPane.showMessageDialog(jDialogErreur,
-                        "Vous n'avez pas indiqué le nom du fichier distant.",
-                        "Problème : Envoie de fichier",
-                        JOptionPane.WARNING_MESSAGE);
-            }
+                if (jTextFieldFichierDistant.getText().equals("")) {
+                    JOptionPane.showMessageDialog(jDialogErreur,
+                            "Vous n'avez pas indiqué le nom du fichier distant.",
+                            "Problème : Envoi de fichier",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
 
-            if (jTextFieldFichierLocal.getText().equals("")) {
-                JOptionPane.showMessageDialog(jDialogErreur,
-                        "Vous n'avez pas indiqué le nom du fichier local.",
-                        "Problème : Envoie de fichier",
-                        JOptionPane.WARNING_MESSAGE);
-            }
+                    if (jTextFieldFichierLocal.getText().equals("")) {
+                        JOptionPane.showMessageDialog(jDialogErreur,
+                                "Vous n'avez pas indiqué le nom du fichier local.",
+                                "Problème : Envoi de fichier",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else {
 
-            if (jTextFieldCheminEnrg.getText().equals("")) {
-                JOptionPane.showMessageDialog(jDialogErreur,
-                        "Vous n'avez pas selectionné l'endroit où vous voulez enregistrer le fichier.",
-                        "Problème : Envoie de fichier",
-                        JOptionPane.WARNING_MESSAGE);
+                        if (jTextFieldCheminEnrg.getText().equals("")) {
+                            JOptionPane.showMessageDialog(jDialogErreur,
+                                    "Vous n'avez pas selectionné l'endroit où vous voulez enregistrer le fichier.",
+                                    "Problème : Envoi de fichier",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                }
             }
         }
     }//GEN-LAST:event_ReceiveFileActionPerformed

@@ -178,7 +178,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Envoyer"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
-                <Property name="actionCommand" type="java.lang.String" value="Envoyer"/>
                 <Property name="name" type="java.lang.String" value="jButtonSendfile" noResource="true"/>
               </Properties>
               <Events>
@@ -279,7 +278,6 @@
             <Component class="javax.swing.JButton" name="jButtonReceivefile">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Recevoir"/>
-                <Property name="actionCommand" type="java.lang.String" value="Recevoir"/>
                 <Property name="name" type="java.lang.String" value="jButtonReceivefile" noResource="true"/>
               </Properties>
               <Events>
