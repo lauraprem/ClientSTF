@@ -57,7 +57,7 @@ public class Client
      */
     public void initSocket()
     {
-        int SO_TIMEOUT = 180000; // 3 minutes
+        int SO_TIMEOUT = 9000; // 3 minutes
         try
         {
             datagramSocket = new DatagramSocket();
@@ -220,7 +220,7 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                 return 11;
+                 return 10;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -252,7 +252,7 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                 return 11;
+                 return 10;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -289,7 +289,7 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                 return 11;
+                 return 10;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -316,7 +316,7 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                return 11;
+                return 10;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -456,7 +456,7 @@ public class Client
         } catch (IOException exe)
         {
             System.err.println(exe.getMessage());
-            return 10;
+            return 8;
         }
         portServeur = 69;
         return 0;
@@ -483,7 +483,7 @@ public class Client
             File fichier = new File(chemin + "/" + nomLocal);
             if (fichier.exists())
             {
-                return 6;
+                return 11;
             }
 
             // demande pour envoyer un fichier
@@ -534,7 +534,7 @@ public class Client
         } catch (IOException ex)
         {
             System.err.println(ex.getMessage());
-            return 10;
+            return 8;
         }
         portServeur = 69;
         return 0;
