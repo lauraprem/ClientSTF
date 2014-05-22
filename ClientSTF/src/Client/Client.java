@@ -16,8 +16,7 @@ import java.net.SocketTimeoutException;
  *
  * @author Corinne
  */
-public class Client
-{
+public class Client {
 
     // ATTRIBUTS
     private DatagramSocket datagramSocket;
@@ -43,8 +42,7 @@ public class Client
     /**
      * Constructeur non paramétré
      */
-    public Client()
-    {
+    public Client() {
         initSocket();
         portServeur = 69;
         datagramPacketEnvoie = new DatagramPacket(new byte[DATA_SIZE + HEADER_SIZE], DATA_SIZE + HEADER_SIZE);
@@ -55,15 +53,12 @@ public class Client
     /**
      * Permet d'initialiser le socket avec un timeout de 3 minutes
      */
-    public void initSocket()
-    {
+    public void initSocket() {
         int SO_TIMEOUT = 9000; // 3 minutes
-        try
-        {
+        try {
             datagramSocket = new DatagramSocket();
             datagramSocket.setSoTimeout(SO_TIMEOUT);
-        } catch (SocketException ex)
-        {
+        } catch (SocketException ex) {
             System.err.println("Port déjà occupé : " + ex.getMessage());
         }
     }
@@ -76,8 +71,7 @@ public class Client
      * @param mode le mode d'envoie
      * @return les données constituant un paquet RRQ ou WRQ
      */
-    public byte[] CreatPaquet_RRQ_WRQ(int codeOp, String nomFichier, String mode)
-    {
+    public byte[] CreatPaquet_RRQ_WRQ(int codeOp, String nomFichier, String mode) {
         int size = 0;
         byte[] data = new byte[nomFichier.getBytes().length + mode.getBytes().length + 4];
 
@@ -112,8 +106,7 @@ public class Client
      * @param donnees données à envoyer
      * @return les données constituant un paquet DATA
      */
-    public byte[] CreatPaquet_DATA(int i, byte[] donnees)
-    {
+    public byte[] CreatPaquet_DATA(int i, byte[] donnees) {
         int size = 0;
         byte[] data = new byte[donnees.length + HEADER_SIZE];
 
@@ -139,8 +132,7 @@ public class Client
      * @param i numéro de bloc
      * @return les données constituant un paquet ACK
      */
-    public byte[] CreatPaquet_ACK(byte d, byte u)
-    {
+    public byte[] CreatPaquet_ACK(byte d, byte u) {
         int size = 0;
         byte[] data = new byte[4];
 
@@ -164,8 +156,7 @@ public class Client
      * @param msgErreur message de l'erreur
      * @return les données constituant un paquet ERR
      */
-    public byte[] CreatPaquet_ERROR(int codeErreur, String msgErreur)
-    {
+    public byte[] CreatPaquet_ERROR(int codeErreur, String msgErreur) {
         int size = 0;
         byte[] data = new byte[4];
 
@@ -197,64 +188,50 @@ public class Client
      * @return 0 si on recoit un bon acknowledge, le numéro d'erreur si on a un
      * paquet d'erreur
      */
-    private int EnvoiWRQ()
-    {
+    private int EnvoiWRQ() {
         byte[] buf;
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 // on envoie
                 datagramSocket.send(datagramPacketEnvoie);
                 // on receptionne la réponse
                 datagramSocket.receive(datagramPacketReception);
                 buf = datagramPacketReception.getData();
-                if (buf[0] == 0 && buf[1] == ACK_OPCODE && 0 == buf[2] && 0 == buf[3])
-                {
+                if (buf[0] == 0 && buf[1] == ACK_OPCODE && 0 == buf[2] && 0 == buf[3]) {
                     return 0;
-                } else if (buf[1] == ERROR_OPCODE)
-                {
+                } else if (buf[1] == ERROR_OPCODE) {
                     return buf[3];
                 }
 
-            } catch (SocketTimeoutException e)
-            {
+            } catch (SocketTimeoutException e) {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                 return 10;
-            } catch (IOException e)
-            {
+                return 10;
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
-               
+
             }
         }
     }
 
-    private int EnvoiRRQ()
-    {
+    private int EnvoiRRQ() {
         byte[] buf;
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 // on envoie
                 datagramSocket.send(datagramPacketEnvoie);
                 // on receptionne la réponse
                 datagramSocket.receive(datagramPacketReception);
                 buf = datagramPacketReception.getData();
-                if (buf[0] == 0 && buf[1] == DATA_OPCODE && 0 == buf[2] && 1 == buf[3])
-                {
+                if (buf[0] == 0 && buf[1] == DATA_OPCODE && 0 == buf[2] && 1 == buf[3]) {
                     return 0;
-                } else if (buf[1] == ERROR_OPCODE)
-                {
+                } else if (buf[1] == ERROR_OPCODE) {
                     return buf[3];
                 }
 
-            } catch (SocketTimeoutException e)
-            {
+            } catch (SocketTimeoutException e) {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                 return 10;
-            } catch (IOException e)
-            {
+                return 10;
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -266,32 +243,25 @@ public class Client
      * @return 0 si on recoit un bon acknowledge, le numéro d'erreur si on a un
      * paquet d'erreur
      */
-    private int EnvoiData()
-    {
+    private int EnvoiData() {
         byte[] buf;
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 // on envoie
                 datagramSocket.send(datagramPacketEnvoie);
                 // on receptionne la réponse
                 datagramSocket.receive(datagramPacketReception);
                 buf = datagramPacketReception.getData();
-                if (buf[0] == 0 && buf[1] == ACK_OPCODE && datagramPacketEnvoie.getData()[2] == buf[2] && datagramPacketEnvoie.getData()[3] == buf[3])
-                {
+                if (buf[0] == 0 && buf[1] == ACK_OPCODE && datagramPacketEnvoie.getData()[2] == buf[2] && datagramPacketEnvoie.getData()[3] == buf[3]) {
                     return 0;
-                } else if (buf[1] == ERROR_OPCODE)
-                {
+                } else if (buf[1] == ERROR_OPCODE) {
                     return buf[3];
                 }
 
-            } catch (SocketTimeoutException e)
-            {
+            } catch (SocketTimeoutException e) {
                 System.err.println("time_out dépassé : " + e.getMessage());
-                 return 10;
-            } catch (IOException e)
-            {
+                return 10;
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -303,22 +273,17 @@ public class Client
      * @return 0 si on recoit un bon packet, le numéro d'erreur si on a un
      * paquet d'erreur
      */
-    private int EnvoiAck()
-    {
+    private int EnvoiAck() {
         byte[] buf;
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 // on envoie
                 datagramSocket.send(datagramPacketEnvoie);
                 return 0;
-            } catch (SocketTimeoutException e)
-            {
+            } catch (SocketTimeoutException e) {
                 System.err.println("time_out dépassé : " + e.getMessage());
                 return 10;
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -327,15 +292,11 @@ public class Client
     /**
      * permet d'envoyer un paquet d'erreur
      */
-    private void EnvoiErr()
-    {
-        try
-        {
+    private void EnvoiErr() {
+        try {
             // on envoie
             datagramSocket.send(datagramPacketEnvoie);
-        } 
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
     }
@@ -346,15 +307,13 @@ public class Client
      * @param data les données à envoyer
      * @param portServeur le port du serveur
      * @param serveur l'adresse du serveur
-     * @return 0 si tout s'est bien passé le code d'erreur si l'on en a reçu une
-     * (de 1 à 7) -1 si l'on a nous même envoyé une erreur
+     * @return 0 si tout s'est bien passé le code d'erreur si l'on en a reçu
+     * une(de 1 à 7) -1 en cas de problème
      */
-    public int EnvoiDatagram(byte[] data, int portServeur, InetAddress serveur)
-    {
+    public int EnvoiDatagram(byte[] data, int portServeur, InetAddress serveur) {
         datagramPacketEnvoie = new DatagramPacket(data, data.length, serveur, portServeur);
         int opcode = data[1];
-        switch (opcode)
-        {
+        switch (opcode) {
             case RRQ_OPCODE:
                 return EnvoiRRQ();
             case WRQ_OPCODE:
@@ -375,19 +334,18 @@ public class Client
      *
      * @param fichier le fichier que l'on veut envoyer
      * @param serveur l'adresse du serveur
-     * @return -1 nous avons envoyé un erreur 0 = bon déroulement de 1 a 7 code
-     * erreur protocole 8 = impossible de lire le fichier parce qu'il n'existe
-     * pas ou qu'on n'a pas les droits 9 = impossibe de lire le fichier a cause
-     * de l'encodage 10 = problème d'entrée/sortie
+     * @return 
+     * 0 si tout s'est bien passé 
+     * le code d'erreur si l'on en a reçu une(de 1 à 7) 
+     * 8 = violation d'accès 
+     * 9 = impossibe de lire le fichier a cause de l'encodage 
+     * 10 = time out
      */
-    public int SendFile(File fichier, InetAddress serveur)
-    {
+    public int SendFile(File fichier, InetAddress serveur) {
         int resEnvoie;
-        try
-        {
+        try {
             //vérification des droits et de l'existance du fichier
-            if (fichier.canRead())
-            {
+            if (fichier.canRead()) {
                 FileInputStream monFileInputStream = new FileInputStream(fichier);
                 byte[] data;
                 String temp = new String();
@@ -396,8 +354,7 @@ public class Client
                 data = CreatPaquet_RRQ_WRQ(WRQ_OPCODE, fichier.getName(), BINARY_MODE);
                 //data[fichier.getName().getBytes().length + 3 + temp.getBytes().length] = 0;
                 resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-                if (resEnvoie != 0)
-                {
+                if (resEnvoie != 0) {
                     return resEnvoie;
                 }
                 portServeur = datagramPacketReception.getPort();
@@ -409,16 +366,13 @@ public class Client
                 int index = 1;
 
                 //on parcourt le fichier
-                for (int i = 0; i < fichier.length(); i++)
-                {
+                for (int i = 0; i < fichier.length(); i++) {
                     //on lit des morceau de 512 octets 
-                    if (monFileInputStream.available() >= DATA_SIZE)
-                    {
+                    if (monFileInputStream.available() >= DATA_SIZE) {
                         monFileInputStream.read(data, 0, DATA_SIZE);
                         //si l'on est à la fin du fichier, on envoie un datagram 
                         //contenant moins de 512 octets de données pour signaler que c'est le dernier
-                    } else
-                    {
+                    } else {
                         int a = monFileInputStream.available();
                         data = new byte[a];
                         monFileInputStream.read(data, 0, a);
@@ -426,8 +380,7 @@ public class Client
                          data[1] = 3;*/
                         data = CreatPaquet_DATA(index, data);
                         resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-                        if (resEnvoie != 0)
-                        {
+                        if (resEnvoie != 0) {
                             return resEnvoie;
                         }
                         break;
@@ -435,8 +388,7 @@ public class Client
                     }
                     data = CreatPaquet_DATA(index, data);
                     resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-                    if (resEnvoie != 0)
-                    {
+                    if (resEnvoie != 0) {
                         return resEnvoie;
                     }
                     buffer = new String();
@@ -445,16 +397,19 @@ public class Client
                 }
             }
 
-        } catch (SecurityException ex)
-        {
+        } catch (SecurityException ex) {
             System.err.println(ex.getMessage());
+            byte[] data;
+            data = CreatPaquet_ERROR(2, BINARY_MODE);
+            EnvoiDatagram(data, portServeur, serveur);
             return 8;
-        } catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             System.err.println(e.getMessage());
+            byte[] data;
+            data = CreatPaquet_ERROR(1, BINARY_MODE);
+            EnvoiDatagram(data, portServeur, serveur);
             return 9;
-        } catch (IOException exe)
-        {
+        } catch (IOException exe) {
             System.err.println(exe.getMessage());
             return 8;
         }
@@ -469,36 +424,36 @@ public class Client
      * @param nomDistant nom du fichier sur le serveur
      * @param serveur adresse du serveur
      * @param chemin chemin d'accès au fichier
-     * @return -1 nous avons envoyé un erreur 0 = bon déroulement de 1 a 7 code
-     * erreur protocole 9 = impossibe de lire le fichier a cause de l'encodage
-     * 10 = problème d'entrée/sortie
+     * @return 
+     * 0 si tout s'est bien passé 
+     * le code d'erreur si l'on en a reçu une(de 1 à 7) 
+     * 8 = violation d'accès 
+     * 9 = impossibe de lire le fichier a cause de l'encodage 
+     * 10 = time out
+     * 11 = le nom choisit existe déjà
      */
-    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin)
-    {
+    
+    public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin) {
         int resEnvoie;
-        try
-        {
+        try {
             byte[] data = new byte[DATA_SIZE];
             String temp = new String();
             File fichier = new File(chemin + "/" + nomLocal);
-            if (fichier.exists())
-            {
+            if (fichier.exists()) {
                 return 11;
             }
 
             // demande pour envoyer un fichier
             data = CreatPaquet_RRQ_WRQ(RRQ_OPCODE, nomDistant, BINARY_MODE);
             resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-            if (resEnvoie != 0)
-            {
+            if (resEnvoie != 0) {
                 return resEnvoie;
             }
 
             portServeur = datagramPacketReception.getPort();
             data = CreatPaquet_ACK(datagramPacketReception.getData()[2], datagramPacketReception.getData()[3]);
             resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-            if (resEnvoie != 0)
-            {
+            if (resEnvoie != 0) {
                 return resEnvoie;
             }
             // on résupère le premier datagram de données
@@ -509,15 +464,13 @@ public class Client
             FileOutputStream monFileOutputStream = new FileOutputStream(fichier, true);
             monFileOutputStream.write(data);
             //tant que le bloc que l'on reçoit contient 516 octets (4 d'entete et 512 de données)
-            while (datagramPacketReception.getLength() == DATA_SIZE + HEADER_SIZE)
-            {
+            while (datagramPacketReception.getLength() == DATA_SIZE + HEADER_SIZE) {
                 //reception des données
                 datagramSocket.receive(datagramPacketReception);
                 //acknowledge
                 data = CreatPaquet_ACK(datagramPacketReception.getData()[2], datagramPacketReception.getData()[3]);
                 resEnvoie = EnvoiDatagram(data, portServeur, serveur);
-                if (resEnvoie != 0)
-                {
+                if (resEnvoie != 0) {
                     return resEnvoie;
                 }
                 //
@@ -527,13 +480,17 @@ public class Client
                 //écriture dans le fichier
                 monFileOutputStream.write(data);
             }
-        } catch (UnsupportedEncodingException ex)
-        {
+        } catch (UnsupportedEncodingException ex) {
             System.err.println(ex.getMessage());
+            byte[] data;
+            data = CreatPaquet_ERROR(1, BINARY_MODE);
+            EnvoiDatagram(data, portServeur, serveur);
             return 9;
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
+            byte[] data;
+            data = CreatPaquet_ERROR(2, BINARY_MODE);
+            EnvoiDatagram(data, portServeur, serveur);
             return 8;
         }
         portServeur = 69;
