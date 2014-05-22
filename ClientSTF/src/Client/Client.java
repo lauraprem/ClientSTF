@@ -200,6 +200,9 @@ public class Client {
                 if (buf[0] == 0 && buf[1] == ACK_OPCODE && 0 == buf[2] && 0 == buf[3]) {
                     return 0;
                 } else if (buf[1] == ERROR_OPCODE) {
+                    if (buf[3] == 0) {
+                        return -1;
+                    }
                     return buf[3];
                 }
 
@@ -225,6 +228,9 @@ public class Client {
                 if (buf[0] == 0 && buf[1] == DATA_OPCODE && 0 == buf[2] && 1 == buf[3]) {
                     return 0;
                 } else if (buf[1] == ERROR_OPCODE) {
+                    if (buf[3] == 0) {
+                        return -1;
+                    }
                     return buf[3];
                 }
 
@@ -255,6 +261,9 @@ public class Client {
                 if (buf[0] == 0 && buf[1] == ACK_OPCODE && datagramPacketEnvoie.getData()[2] == buf[2] && datagramPacketEnvoie.getData()[3] == buf[3]) {
                     return 0;
                 } else if (buf[1] == ERROR_OPCODE) {
+                    if (buf[3] == 0) {
+                        return -1;
+                    }
                     return buf[3];
                 }
 
@@ -308,7 +317,7 @@ public class Client {
      * @param portServeur le port du serveur
      * @param serveur l'adresse du serveur
      * @return 0 si tout s'est bien passé le code d'erreur si l'on en a reçu
-     * une(de 1 à 7) -1 en cas de problème
+     * une(de 1 à 7) -1 en cas de problème ou d'erreur indéfinie
      */
     public int EnvoiDatagram(byte[] data, int portServeur, InetAddress serveur) {
         datagramPacketEnvoie = new DatagramPacket(data, data.length, serveur, portServeur);
@@ -334,12 +343,9 @@ public class Client {
      *
      * @param fichier le fichier que l'on veut envoyer
      * @param serveur l'adresse du serveur
-     * @return 
-     * 0 si tout s'est bien passé 
-     * le code d'erreur si l'on en a reçu une(de 1 à 7) 
-     * 8 = violation d'accès 
-     * 9 = impossibe de lire le fichier a cause de l'encodage 
-     * 10 = time out
+     * @return 0 si tout s'est bien passé le code d'erreur si l'on en a reçu
+     * une(de 1 à 7) 8 = violation d'accès 9 = impossibe de lire le fichier a
+     * cause de l'encodage 10 = time out
      */
     public int SendFile(File fichier, InetAddress serveur) {
         int resEnvoie;
@@ -424,15 +430,10 @@ public class Client {
      * @param nomDistant nom du fichier sur le serveur
      * @param serveur adresse du serveur
      * @param chemin chemin d'accès au fichier
-     * @return 
-     * 0 si tout s'est bien passé 
-     * le code d'erreur si l'on en a reçu une(de 1 à 7) 
-     * 8 = violation d'accès 
-     * 9 = impossibe de lire le fichier a cause de l'encodage 
-     * 10 = time out
-     * 11 = le nom choisit existe déjà
+     * @return 0 si tout s'est bien passé le code d'erreur si l'on en a reçu
+     * une(de 1 à 7) 8 = violation d'accès 9 = impossibe de lire le fichier a
+     * cause de l'encodage 10 = time out 11 = le nom choisit existe déjà
      */
-    
     public int ReceiveFile(String nomLocal, String nomDistant, InetAddress serveur, String chemin) {
         int resEnvoie;
         try {
