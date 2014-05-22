@@ -220,9 +220,11 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
+                 return 11;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
+               
             }
         }
     }
@@ -250,6 +252,7 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
+                 return 11;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -286,6 +289,7 @@ public class Client
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
+                 return 11;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -309,22 +313,10 @@ public class Client
                 // on envoie
                 datagramSocket.send(datagramPacketEnvoie);
                 return 0;
-                // on receptionne la réponse
-               /* datagramSocket.receive(datagramPacketReception);
-                 return 0;
-                 buf = datagramPacketReception.getData();
-                 
-                 if (buf[0] == 0 && buf[1] == DATA_OPCODE && datagramPacketEnvoie.getData()[2]  == buf[2]+1 && datagramPacketEnvoie.getData()[3]  == buf[3]+1)
-                 {
-                 return 0;
-                 } else if (buf[1] == ERROR_OPCODE)
-                 {
-                 return buf[3];
-                 }
-                 */
             } catch (SocketTimeoutException e)
             {
                 System.err.println("time_out dépassé : " + e.getMessage());
+                return 11;
             } catch (IOException e)
             {
                 System.err.println(e.getMessage());
@@ -341,7 +333,8 @@ public class Client
         {
             // on envoie
             datagramSocket.send(datagramPacketEnvoie);
-        } catch (IOException ex)
+        } 
+        catch (IOException ex)
         {
             System.err.println(ex.getMessage());
         }
