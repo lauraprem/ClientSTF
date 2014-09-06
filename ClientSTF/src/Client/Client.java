@@ -1,4 +1,4 @@
-/* FAGNO CORINNE */
+/* CORINNE */
 package Client;
 
 import java.io.File;
